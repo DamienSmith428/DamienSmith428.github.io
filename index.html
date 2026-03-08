@@ -6,88 +6,88 @@
 
 <style>
 body{
-    background:#0f1116;
-    color:white;
-    font-family:Segoe UI,Arial;
-    margin:0;
+background:#0f1116;
+color:white;
+font-family:Segoe UI,Arial;
+margin:0;
 }
 
 header{
-    background:#181c25;
-    padding:20px;
-    text-align:center;
-    font-size:26px;
-    font-weight:bold;
+background:#181c25;
+padding:20px;
+text-align:center;
+font-size:26px;
+font-weight:bold;
 }
 
 .container{
-    max-width:900px;
-    margin:auto;
-    padding:30px;
+max-width:900px;
+margin:auto;
+padding:30px;
 }
 
 .card{
-    background:#181c25;
-    border-radius:12px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 5px 15px rgba(0,0,0,.4);
+background:#181c25;
+border-radius:12px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.4);
 }
 
 input{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:6px;
-    background:#0f1116;
-    color:white;
-    font-size:16px;
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+background:#0f1116;
+color:white;
+font-size:16px;
 }
 
 button{
-    padding:10px 18px;
-    border:none;
-    border-radius:6px;
-    background:#3b82f6;
-    color:white;
-    cursor:pointer;
-    margin-top:10px;
-    font-size:16px;
+padding:10px 18px;
+border:none;
+border-radius:6px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+margin-top:10px;
+font-size:16px;
 }
 
 button:hover{
-    background:#2563eb;
+background:#2563eb;
 }
 
 .token{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    background:#0f1116;
-    padding:12px;
-    border-radius:8px;
-    margin-top:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#0f1116;
+padding:12px;
+border-radius:8px;
+margin-top:10px;
 }
 
 .actions button{
-    margin-left:8px;
-    background:#444;
-    color:white;
+margin-left:8px;
+background:#444;
+color:white;
 }
 
 .actions button.activate{
-    background:#22c55e;
+background:#22c55e;
 }
 
 .actions button.delete{
-    background:#ef4444;
+background:#ef4444;
 }
 
 .status{
-    margin-top:15px;
-    color:#9ca3af;
-    font-size:14px;
+margin-top:15px;
+color:#9ca3af;
+font-size:14px;
 }
 </style>
 
@@ -103,7 +103,7 @@ LSO Account Manager
 
 <div class="card">
 <h3>Saved Tokens</h3>
-<div id="tokenList">Loading...</div>
+<div id="tokenList"></div>
 <div class="status" id="status"></div>
 </div>
 
@@ -118,138 +118,109 @@ LSO Account Manager
 
 <script>
 
-// PS4 payload API
-const API = "http://127.0.0.1:9020";
-
 function setStatus(msg){
-    document.getElementById("status").innerText = msg;
+document.getElementById("status").innerText = msg;
 }
 
-
-// =============================
-// AUTO RUN PAYLOAD
-// =============================
-
-async function runPayload(){
-    try{
-        setStatus("Running payload...");
-
-        // Trigger payload
-        await fetch(API + "/run");
-
-        setStatus("Payload executed.");
-    }catch(e){
-        setStatus("Payload trigger failed or already running.");
-    }
+function getTokens(){
+let data = localStorage.getItem("lso_tokens");
+return data ? JSON.parse(data) : [];
 }
 
-
-// =============================
-// TOKEN FUNCTIONS
-// =============================
-
-async function loadTokens(){
-    setStatus("Loading tokens...");
-    try {
-        let res = await fetch(API + "/tokens");
-        let tokens = await res.json();
-        renderTokens(tokens);
-        setStatus("Tokens loaded");
-    } catch(e) {
-        document.getElementById("tokenList").innerHTML = "⚠ Payload not running or network error.";
-        setStatus("");
-    }
+function saveTokens(tokens){
+localStorage.setItem("lso_tokens",JSON.stringify(tokens));
 }
 
-function renderTokens(tokens){
-    let list = document.getElementById("tokenList");
-    list.innerHTML = "";
+function loadTokens(){
 
-    if(tokens.length === 0){
-        list.innerHTML = "No saved tokens.";
-        return;
-    }
+let tokens = getTokens();
 
-    tokens.forEach(t=>{
-        let div = document.createElement("div");
-        div.className = "token";
-        div.innerHTML = `
-            <div>${t.name}</div>
-            <div class="actions">
-                <button class="activate" onclick="activate('${t.token}')">Activate</button>
-                <button class="delete" onclick="removeToken('${t.token}')">Delete</button>
-            </div>
-        `;
-        list.appendChild(div);
-    });
+let list = document.getElementById("tokenList");
+list.innerHTML="";
+
+if(tokens.length===0){
+list.innerHTML="No saved tokens.";
+return;
 }
 
-async function addToken(){
-    let name = document.getElementById("name").value.trim();
-    let token = document.getElementById("token").value.trim();
+tokens.forEach((t,index)=>{
 
-    if(!name || !token){
-        setStatus("Enter both account name and token.");
-        return;
-    }
+let div=document.createElement("div");
 
-    try {
-        await fetch(API + "/add",{
-            method:"POST",
-            headers:{"Content-Type":"application/x-www-form-urlencoded"},
-            body: "name=" + encodeURIComponent(name) + "&token=" + encodeURIComponent(token)
-        });
+div.className="token";
 
-        document.getElementById("name").value = "";
-        document.getElementById("token").value = "";
-        setStatus("Token added.");
-        loadTokens();
-    } catch(e){
-        setStatus("Failed to add token. Is payload running?");
-    }
+div.innerHTML=`
+<div>${t.name}</div>
+<div class="actions">
+<button class="activate" onclick="activate(${index})">Activate</button>
+<button class="delete" onclick="removeToken(${index})">Delete</button>
+</div>
+`;
+
+list.appendChild(div);
+
+});
+
 }
 
-async function activate(token){
-    try {
-        await fetch(API + "/set",{
-            method:"POST",
-            headers:{"Content-Type":"application/x-www-form-urlencoded"},
-            body: "token=" + encodeURIComponent(token)
-        });
-        setStatus("Token activated.");
-    } catch(e){
-        setStatus("Failed to activate token.");
-    }
+function addToken(){
+
+let name=document.getElementById("name").value.trim();
+let token=document.getElementById("token").value.trim();
+
+if(!name || !token){
+setStatus("Enter both account name and token.");
+return;
 }
 
-async function removeToken(token){
-    try {
-        await fetch(API + "/delete",{
-            method:"POST",
-            headers:{"Content-Type":"application/x-www-form-urlencoded"},
-            body: "token=" + encodeURIComponent(token)
-        });
-        setStatus("Token removed.");
-        loadTokens();
-    } catch(e){
-        setStatus("Failed to remove token.");
-    }
+let tokens=getTokens();
+
+tokens.push({
+name:name,
+token:token
+});
+
+saveTokens(tokens);
+
+document.getElementById("name").value="";
+document.getElementById("token").value="";
+
+setStatus("Token saved.");
+
+loadTokens();
+
 }
 
+function activate(index){
 
-// =============================
-// PAGE LOAD SEQUENCE
-// =============================
+let tokens=getTokens();
 
-window.onload = async function(){
+let token=tokens[index].token;
 
-    // Step 1 run payload
-    await runPayload();
+/* 
+This is where your payload would use the token.
+For now we just show it.
+*/
 
-    // Step 2 wait a moment for payload to initialize
-    setTimeout(loadTokens, 1500);
+setStatus("Activated token: "+token);
 
-};
+}
+
+function removeToken(index){
+
+let tokens=getTokens();
+
+tokens.splice(index,1);
+
+saveTokens(tokens);
+
+setStatus("Token deleted.");
+
+loadTokens();
+
+}
+
+window.onload=loadTokens;
 
 </script>
 

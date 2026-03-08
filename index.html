@@ -1,93 +1,94 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 
 <title>LSO Account Manager</title>
 
 <style>
-
 body{
-background:#0f1116;
-color:white;
-font-family:Segoe UI,Arial;
-margin:0;
+    background:#0f1116;
+    color:white;
+    font-family:Segoe UI,Arial;
+    margin:0;
 }
 
 header{
-background:#181c25;
-padding:20px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
+    background:#181c25;
+    padding:20px;
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
 }
 
 .container{
-max-width:900px;
-margin:auto;
-padding:30px;
+    max-width:900px;
+    margin:auto;
+    padding:30px;
 }
 
 .card{
-background:#181c25;
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 5px 15px rgba(0,0,0,.4);
+    background:#181c25;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,.4);
 }
 
 input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:6px;
-background:#0f1116;
-color:white;
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:6px;
+    background:#0f1116;
+    color:white;
+    font-size:16px;
 }
 
 button{
-padding:10px 18px;
-border:none;
-border-radius:6px;
-background:#3b82f6;
-color:white;
-cursor:pointer;
-margin-top:10px;
+    padding:10px 18px;
+    border:none;
+    border-radius:6px;
+    background:#3b82f6;
+    color:white;
+    cursor:pointer;
+    margin-top:10px;
+    font-size:16px;
 }
 
 button:hover{
-background:#2563eb;
+    background:#2563eb;
 }
 
 .token{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#0f1116;
-padding:12px;
-border-radius:8px;
-margin-top:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#0f1116;
+    padding:12px;
+    border-radius:8px;
+    margin-top:10px;
 }
 
 .actions button{
-margin-left:8px;
-background:#444;
+    margin-left:8px;
+    background:#444;
+    color:white;
 }
 
 .actions button.activate{
-background:#22c55e;
+    background:#22c55e;
 }
 
 .actions button.delete{
-background:#ef4444;
+    background:#ef4444;
 }
 
 .status{
-margin-top:15px;
-color:#9ca3af;
+    margin-top:15px;
+    color:#9ca3af;
+    font-size:14px;
 }
-
 </style>
 
 </head>
@@ -101,135 +102,120 @@ LSO Account Manager
 <div class="container">
 
 <div class="card">
-
-<h3>PS4 Connection</h3>
-
-<input id="ip" placeholder="PS4 IP Address (example: 192.168.1.45)">
-
-<button onclick="loadTokens()">Connect</button>
-
-<div class="status" id="status"></div>
-
-</div>
-
-<div class="card">
-
 <h3>Saved Tokens</h3>
-
-<div id="tokenList"></div>
-
+<div id="tokenList">Loading...</div>
+<div class="status" id="status"></div>
 </div>
 
 <div class="card">
-
 <h3>Add New Token</h3>
-
 <input id="name" placeholder="Account name (example: Main Account)">
-
 <input id="token" placeholder="token_username_123456789">
-
 <button onclick="addToken()">Add Token</button>
-
 </div>
 
 </div>
 
 <script>
 
-let ip="";
+// Assume payload running on PS4 localhost
+const API = "http://127.0.0.1:9020";
 
 function setStatus(msg){
-document.getElementById("status").innerText=msg;
+    document.getElementById("status").innerText = msg;
 }
 
+// Fetch tokens and render
 async function loadTokens(){
-
-ip=document.getElementById("ip").value;
-
-setStatus("Connecting to PS4...");
-
-let res=await fetch("http://"+ip+":9020/tokens");
-
-let data=await res.json();
-
-renderTokens(data);
-
-setStatus("Connected");
-
+    setStatus("Loading tokens...");
+    try {
+        let res = await fetch(API + "/tokens");
+        let tokens = await res.json();
+        renderTokens(tokens);
+        setStatus("Tokens loaded");
+    } catch(e) {
+        document.getElementById("tokenList").innerHTML = "⚠ Payload not running or network error.";
+        setStatus("");
+    }
 }
 
 function renderTokens(tokens){
+    let list = document.getElementById("tokenList");
+    list.innerHTML = "";
 
-let list=document.getElementById("tokenList");
+    if(tokens.length === 0){
+        list.innerHTML = "No saved tokens.";
+        return;
+    }
 
-list.innerHTML="";
-
-tokens.forEach(t=>{
-
-let div=document.createElement("div");
-
-div.className="token";
-
-div.innerHTML=`
-<div>${t.name}</div>
-
-<div class="actions">
-<button class="activate" onclick="activate('${t.token}')">Activate</button>
-<button class="delete" onclick="removeToken('${t.token}')">Delete</button>
-</div>
-`;
-
-list.appendChild(div);
-
-});
-
+    tokens.forEach(t=>{
+        let div = document.createElement("div");
+        div.className = "token";
+        div.innerHTML = `
+            <div>${t.name}</div>
+            <div class="actions">
+                <button class="activate" onclick="activate('${t.token}')">Activate</button>
+                <button class="delete" onclick="removeToken('${t.token}')">Delete</button>
+            </div>
+        `;
+        list.appendChild(div);
+    });
 }
 
 async function addToken(){
+    let name = document.getElementById("name").value.trim();
+    let token = document.getElementById("token").value.trim();
 
-let name=document.getElementById("name").value;
+    if(!name || !token){
+        setStatus("Enter both account name and token.");
+        return;
+    }
 
-let token=document.getElementById("token").value;
+    try {
+        await fetch(API + "/add",{
+            method:"POST",
+            headers:{"Content-Type":"application/x-www-form-urlencoded"},
+            body: "name=" + encodeURIComponent(name) + "&token=" + encodeURIComponent(token)
+        });
 
-await fetch("http://"+ip+":9020/add",{
-
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({name:name,token:token})
-
-});
-
-loadTokens();
-
+        document.getElementById("name").value = "";
+        document.getElementById("token").value = "";
+        setStatus("Token added.");
+        loadTokens();
+    } catch(e){
+        setStatus("Failed to add token. Is payload running?");
+    }
 }
 
 async function activate(token){
-
-await fetch("http://"+ip+":9020/set",{
-
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({token:token})
-
-});
-
-setStatus("Token activated");
-
+    try {
+        await fetch(API + "/set",{
+            method:"POST",
+            headers:{"Content-Type":"application/x-www-form-urlencoded"},
+            body: "token=" + encodeURIComponent(token)
+        });
+        setStatus("Token activated.");
+    } catch(e){
+        setStatus("Failed to activate token.");
+    }
 }
 
 async function removeToken(token){
-
-await fetch("http://"+ip+":9020/delete",{
-
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({token:token})
-
-});
-
-loadTokens();
-
+    try {
+        await fetch(API + "/delete",{
+            method:"POST",
+            headers:{"Content-Type":"application/x-www-form-urlencoded"},
+            body: "token=" + encodeURIComponent(token)
+        });
+        setStatus("Token removed.");
+        loadTokens();
+    } catch(e){
+        setStatus("Failed to remove token.");
+    }
 }
+
+// Auto-load tokens on page load
+window.onload = loadTokens;
 
 </script>
 

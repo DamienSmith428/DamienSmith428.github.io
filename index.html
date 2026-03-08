@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+<title>LSO Account Manager</title>
+
+<style>
+
+body{
+background:#0f1116;
+color:white;
+font-family:Segoe UI,Arial;
+margin:0;
+}
+
+header{
+background:#181c25;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:#181c25;
+border-radius:12px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,.4);
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+background:#0f1116;
+color:white;
+}
+
+button{
+padding:10px 18px;
+border:none;
+border-radius:6px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:hover{
+background:#2563eb;
+}
+
+.token{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#0f1116;
+padding:12px;
+border-radius:8px;
+margin-top:10px;
+}
+
+.actions button{
+margin-left:8px;
+background:#444;
+}
+
+.actions button.activate{
+background:#22c55e;
+}
+
+.actions button.delete{
+background:#ef4444;
+}
+
+.status{
+margin-top:15px;
+color:#9ca3af;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+LSO Account Manager
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h3>PS4 Connection</h3>
+
+<input id="ip" placeholder="PS4 IP Address (example: 192.168.1.45)">
+
+<button onclick="loadTokens()">Connect</button>
+
+<div class="status" id="status"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Saved Tokens</h3>
+
+<div id="tokenList"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Add New Token</h3>
+
+<input id="name" placeholder="Account name (example: Main Account)">
+
+<input id="token" placeholder="token_username_123456789">
+
+<button onclick="addToken()">Add Token</button>
+
+</div>
+
+</div>
+
+<script>
+
+let ip="";
+
+function setStatus(msg){
+document.getElementById("status").innerText=msg;
+}
+
+async function loadTokens(){
+
+ip=document.getElementById("ip").value;
+
+setStatus("Connecting to PS4...");
+
+let res=await fetch("http://"+ip+":9020/tokens");
+
+let data=await res.json();
+
+renderTokens(data);
+
+setStatus("Connected");
+
+}
+
+function renderTokens(tokens){
+
+let list=document.getElementById("tokenList");
+
+list.innerHTML="";
+
+tokens.forEach(t=>{
+
+let div=document.createElement("div");
+
+div.className="token";
+
+div.innerHTML=`
+<div>${t.name}</div>
+
+<div class="actions">
+<button class="activate" onclick="activate('${t.token}')">Activate</button>
+<button class="delete" onclick="removeToken('${t.token}')">Delete</button>
+</div>
+`;
+
+list.appendChild(div);
+
+});
+
+}
+
+async function addToken(){
+
+let name=document.getElementById("name").value;
+
+let token=document.getElementById("token").value;
+
+await fetch("http://"+ip+":9020/add",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({name:name,token:token})
+
+});
+
+loadTokens();
+
+}
+
+async function activate(token){
+
+await fetch("http://"+ip+":9020/set",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({token:token})
+
+});
+
+setStatus("Token activated");
+
+}
+
+async function removeToken(token){
+
+await fetch("http://"+ip+":9020/delete",{
+
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({token:token})
+
+});
+
+loadTokens();
+
+}
+
+</script>
+
+</body>
+</html>

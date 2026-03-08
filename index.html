@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 <title>LSO Account Manager</title>
 
 <style>
-
 body{
 background:#0f1116;
 color:white;
@@ -41,7 +41,6 @@ border:none;
 border-radius:6px;
 background:#0f1116;
 color:white;
-font-size:16px;
 }
 
 button{
@@ -52,133 +51,65 @@ background:#3b82f6;
 color:white;
 cursor:pointer;
 margin-top:10px;
-font-size:16px;
-}
-
-button:hover{
-background:#2563eb;
 }
 
 .token{
 display:flex;
 justify-content:space-between;
-align-items:center;
 background:#0f1116;
 padding:12px;
 border-radius:8px;
 margin-top:10px;
 }
-
-.actions button{
-margin-left:8px;
-background:#444;
-}
-
-.actions button.activate{
-background:#22c55e;
-}
-
-.actions button.delete{
-background:#ef4444;
-}
-
-.status{
-margin-top:15px;
-color:#aaa;
-}
-
 </style>
-
 </head>
 
 <body>
 
-<header>
-LSO Account Manager
-</header>
+<header>LSO Account Manager</header>
 
 <div class="container">
 
 <div class="card">
-
 <h3>Saved Tokens</h3>
-
-<div id="tokenList"></div>
-
-<div class="status" id="status"></div>
-
+<div id="list"></div>
 </div>
 
-
 <div class="card">
-
 <h3>Add Token</h3>
-
-<input id="name" placeholder="Account name (example: Main)">
-<input id="token" placeholder="token_username_123456">
-
+<input id="name" placeholder="Account name">
+<input id="token" placeholder="token_xxxxx">
 <button onclick="addToken()">Add Token</button>
-
 </div>
 
 </div>
 
 <script>
 
-const API="http://127.0.0.1:9020/set";
-
-function setStatus(msg){
-document.getElementById("status").innerText=msg;
-}
-
-
 function getTokens(){
-
-let data=localStorage.getItem("lso_tokens");
-
-return data ? JSON.parse(data) : [];
-
+return JSON.parse(localStorage.getItem("tokens")||"[]");
 }
 
-
-function saveTokens(tokens){
-
-localStorage.setItem("lso_tokens",JSON.stringify(tokens));
-
+function saveTokens(t){
+localStorage.setItem("tokens",JSON.stringify(t));
 }
 
-
-function renderTokens(){
+function render(){
 
 let tokens=getTokens();
-
-let list=document.getElementById("tokenList");
-
+let list=document.getElementById("list");
 list.innerHTML="";
 
-if(tokens.length===0){
-
-list.innerHTML="No saved tokens.";
-
-return;
-
-}
-
-tokens.forEach((t,index)=>{
+tokens.forEach((t,i)=>{
 
 let div=document.createElement("div");
-
 div.className="token";
 
 div.innerHTML=`
 <div>${t.name}</div>
-
-<div class="actions">
-
-<button class="activate" onclick="activateToken(${index})">Activate</button>
-
-<button class="delete" onclick="deleteToken(${index})">Delete</button>
-
+<div>
+<button onclick="activate(${i})">Activate</button>
+<button onclick="del(${i})">Delete</button>
 </div>
 `;
 
@@ -188,88 +119,47 @@ list.appendChild(div);
 
 }
 
-
 function addToken(){
 
-let name=document.getElementById("name").value.trim();
-
-let token=document.getElementById("token").value.trim();
-
-if(!name || !token){
-
-setStatus("Enter both name and token.");
-
-return;
-
-}
+let name=document.getElementById("name").value;
+let token=document.getElementById("token").value;
 
 let tokens=getTokens();
 
-tokens.push({name:name,token:token});
+tokens.push({name,token});
 
 saveTokens(tokens);
 
-document.getElementById("name").value="";
-document.getElementById("token").value="";
-
-setStatus("Token saved.");
-
-renderTokens();
+render();
 
 }
 
-
-function deleteToken(index){
+function del(i){
 
 let tokens=getTokens();
-
-tokens.splice(index,1);
-
+tokens.splice(i,1);
 saveTokens(tokens);
 
-setStatus("Token deleted.");
-
-renderTokens();
+render();
 
 }
 
-
-async function activateToken(index){
+function activate(i){
 
 let tokens=getTokens();
+let token=tokens[i].token;
 
-let token=tokens[index].token;
+/* start exploit */
 
-try{
-
-await fetch(API,{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/x-www-form-urlencoded"
-},
-
-body:"token="+encodeURIComponent(token)
-
-});
-
-setStatus("Token activated and written to bluesphere.txt");
+startExploit(token);
 
 }
 
-catch(e){
-
-setStatus("Failed to send token to PS4 server.");
-
-}
-
-}
-
-
-window.onload=renderTokens;
+render();
 
 </script>
+
+<script src="exploit.js"></script>
 
 </body>
 </html>

@@ -4,57 +4,167 @@
 <title>LSO Account Manager</title>
 
 <style>
-body{background:#0f1116;color:white;font-family:Arial;margin:0}
-header{background:#181c25;padding:20px;text-align:center;font-size:26px}
-.container{max-width:900px;margin:auto;padding:30px}
-.card{background:#181c25;border-radius:12px;padding:20px;margin-bottom:20px}
-input{width:100%;padding:12px;margin-top:10px;border:none;border-radius:6px;background:#0f1116;color:white}
-button{padding:10px 18px;border:none;border-radius:6px;background:#3b82f6;color:white;margin-top:10px;cursor:pointer}
-.token{display:flex;justify-content:space-between;background:#0f1116;padding:12px;border-radius:8px;margin-top:10px}
+
+body{
+background:#0f1116;
+color:white;
+font-family:Arial;
+margin:0;
+}
+
+header{
+background:#181c25;
+padding:20px;
+text-align:center;
+font-size:26px;
+font-weight:bold;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:#181c25;
+border-radius:12px;
+padding:20px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+background:#0f1116;
+color:white;
+font-size:16px;
+}
+
+button{
+padding:10px 18px;
+border:none;
+border-radius:6px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+margin-top:10px;
+font-size:16px;
+}
+
+button:hover{
+background:#2563eb;
+}
+
+.token{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#0f1116;
+padding:12px;
+border-radius:8px;
+margin-top:10px;
+}
+
+.actions button{
+margin-left:8px;
+background:#444;
+}
+
+.actions button.activate{
+background:#22c55e;
+}
+
+.actions button.delete{
+background:#ef4444;
+}
+
+.status{
+margin-top:15px;
+color:#aaa;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<header>LSO Account Manager</header>
+<header>
+LSO Account Manager
+</header>
 
 <div class="container">
 
 <div class="card">
+
 <h3>Saved Tokens</h3>
-<div id="list"></div>
+
+<div id="tokenList"></div>
+
+<div class="status" id="status"></div>
+
 </div>
 
+
 <div class="card">
+
 <h3>Add Token</h3>
-<input id="name" placeholder="Account name">
-<input id="token" placeholder="token_xxxxx">
-<button onclick="add()">Add Token</button>
+
+<input id="name" placeholder="Account name (example: Main)">
+<input id="token" placeholder="token_username_123456">
+
+<button onclick="addToken()">Add Token</button>
+
 </div>
 
 </div>
 
 <script>
 
-const API="http://127.0.0.1:9020";
+const API="http://127.0.0.1:9020/set";
+
+function setStatus(msg){
+document.getElementById("status").innerText=msg;
+}
+
 
 function getTokens(){
-return JSON.parse(localStorage.getItem("tokens")||"[]");
+
+let data=localStorage.getItem("lso_tokens");
+
+return data ? JSON.parse(data) : [];
+
 }
 
-function saveTokens(t){
-localStorage.setItem("tokens",JSON.stringify(t));
+
+function saveTokens(tokens){
+
+localStorage.setItem("lso_tokens",JSON.stringify(tokens));
+
 }
 
-function render(){
+
+function renderTokens(){
 
 let tokens=getTokens();
 
-let list=document.getElementById("list");
+let list=document.getElementById("tokenList");
 
 list.innerHTML="";
 
-tokens.forEach((t,i)=>{
+if(tokens.length===0){
+
+list.innerHTML="No saved tokens.";
+
+return;
+
+}
+
+tokens.forEach((t,index)=>{
 
 let div=document.createElement("div");
 
@@ -62,9 +172,13 @@ div.className="token";
 
 div.innerHTML=`
 <div>${t.name}</div>
-<div>
-<button onclick="activate(${i})">Activate</button>
-<button onclick="del(${i})">Delete</button>
+
+<div class="actions">
+
+<button class="activate" onclick="activateToken(${index})">Activate</button>
+
+<button class="delete" onclick="deleteToken(${index})">Delete</button>
+
 </div>
 `;
 
@@ -74,52 +188,86 @@ list.appendChild(div);
 
 }
 
-function add(){
 
-let name=document.getElementById("name").value;
-let token=document.getElementById("token").value;
+function addToken(){
 
-let tokens=getTokens();
+let name=document.getElementById("name").value.trim();
 
-tokens.push({name,token});
+let token=document.getElementById("token").value.trim();
 
-saveTokens(tokens);
+if(!name || !token){
 
-render();
+setStatus("Enter both name and token.");
 
-}
-
-function del(i){
-
-let tokens=getTokens();
-
-tokens.splice(i,1);
-
-saveTokens(tokens);
-
-render();
+return;
 
 }
 
-async function activate(i){
+let tokens=getTokens();
+
+tokens.push({name:name,token:token});
+
+saveTokens(tokens);
+
+document.getElementById("name").value="";
+document.getElementById("token").value="";
+
+setStatus("Token saved.");
+
+renderTokens();
+
+}
+
+
+function deleteToken(index){
 
 let tokens=getTokens();
 
-let token=tokens[i].token;
+tokens.splice(index,1);
+
+saveTokens(tokens);
+
+setStatus("Token deleted.");
+
+renderTokens();
+
+}
+
+
+async function activateToken(index){
+
+let tokens=getTokens();
+
+let token=tokens[index].token;
+
+try{
 
 await fetch(API,{
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/x-www-form-urlencoded"
 },
+
 body:"token="+encodeURIComponent(token)
+
 });
 
-alert("Token activated");
+setStatus("Token activated and written to bluesphere.txt");
 
 }
 
-render();
+catch(e){
+
+setStatus("Failed to send token to PS4 server.");
+
+}
+
+}
+
+
+window.onload=renderTokens;
 
 </script>
 

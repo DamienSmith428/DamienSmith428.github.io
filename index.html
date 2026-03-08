@@ -1,149 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>LSO Account Manager</title>
 
 <style>
-body{
-background:#0f1116;
-color:white;
-font-family:Segoe UI,Arial;
-margin:0;
-}
-
-header{
-background:#181c25;
-padding:20px;
-text-align:center;
-font-size:26px;
-font-weight:bold;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:30px;
-}
-
-.card{
-background:#181c25;
-border-radius:12px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 5px 15px rgba(0,0,0,.4);
-}
-
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:6px;
-background:#0f1116;
-color:white;
-font-size:16px;
-}
-
-button{
-padding:10px 18px;
-border:none;
-border-radius:6px;
-background:#3b82f6;
-color:white;
-cursor:pointer;
-margin-top:10px;
-font-size:16px;
-}
-
-button:hover{
-background:#2563eb;
-}
-
-.token{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#0f1116;
-padding:12px;
-border-radius:8px;
-margin-top:10px;
-}
-
-.actions button{
-margin-left:8px;
-background:#444;
-color:white;
-}
-
-.actions button.activate{
-background:#22c55e;
-}
-
-.actions button.delete{
-background:#ef4444;
-}
-
-.status{
-margin-top:15px;
-color:#9ca3af;
-font-size:14px;
-}
+body{background:#0f1116;color:white;font-family:Arial;margin:0}
+header{background:#181c25;padding:20px;text-align:center;font-size:26px}
+.container{max-width:900px;margin:auto;padding:30px}
+.card{background:#181c25;border-radius:12px;padding:20px;margin-bottom:20px}
+input{width:100%;padding:12px;margin-top:10px;border:none;border-radius:6px;background:#0f1116;color:white}
+button{padding:10px 18px;border:none;border-radius:6px;background:#3b82f6;color:white;margin-top:10px;cursor:pointer}
+.token{display:flex;justify-content:space-between;background:#0f1116;padding:12px;border-radius:8px;margin-top:10px}
 </style>
-
 </head>
 
 <body>
 
-<header>
-LSO Account Manager
-</header>
+<header>LSO Account Manager</header>
 
 <div class="container">
 
 <div class="card">
 <h3>Saved Tokens</h3>
-<div id="tokenList"></div>
-<div class="status" id="status"></div>
+<div id="list"></div>
 </div>
 
 <div class="card">
-<h3>Add New Token</h3>
-<input id="name" placeholder="Account name (example: Main Account)">
-<input id="token" placeholder="token_username_123456789">
-<button onclick="addToken()">Add Token</button>
+<h3>Add Token</h3>
+<input id="name" placeholder="Account name">
+<input id="token" placeholder="token_xxxxx">
+<button onclick="add()">Add Token</button>
 </div>
 
 </div>
 
 <script>
 
-function setStatus(msg){
-document.getElementById("status").innerText = msg;
-}
+const API="http://127.0.0.1:9020";
 
 function getTokens(){
-let data = localStorage.getItem("lso_tokens");
-return data ? JSON.parse(data) : [];
+return JSON.parse(localStorage.getItem("tokens")||"[]");
 }
 
-function saveTokens(tokens){
-localStorage.setItem("lso_tokens",JSON.stringify(tokens));
+function saveTokens(t){
+localStorage.setItem("tokens",JSON.stringify(t));
 }
 
-function loadTokens(){
+function render(){
 
-let tokens = getTokens();
+let tokens=getTokens();
 
-let list = document.getElementById("tokenList");
+let list=document.getElementById("list");
+
 list.innerHTML="";
 
-if(tokens.length===0){
-list.innerHTML="No saved tokens.";
-return;
-}
-
-tokens.forEach((t,index)=>{
+tokens.forEach((t,i)=>{
 
 let div=document.createElement("div");
 
@@ -151,9 +62,9 @@ div.className="token";
 
 div.innerHTML=`
 <div>${t.name}</div>
-<div class="actions">
-<button class="activate" onclick="activate(${index})">Activate</button>
-<button class="delete" onclick="removeToken(${index})">Delete</button>
+<div>
+<button onclick="activate(${i})">Activate</button>
+<button onclick="del(${i})">Delete</button>
 </div>
 `;
 
@@ -163,64 +74,52 @@ list.appendChild(div);
 
 }
 
-function addToken(){
+function add(){
 
-let name=document.getElementById("name").value.trim();
-let token=document.getElementById("token").value.trim();
-
-if(!name || !token){
-setStatus("Enter both account name and token.");
-return;
-}
+let name=document.getElementById("name").value;
+let token=document.getElementById("token").value;
 
 let tokens=getTokens();
 
-tokens.push({
-name:name,
-token:token
+tokens.push({name,token});
+
+saveTokens(tokens);
+
+render();
+
+}
+
+function del(i){
+
+let tokens=getTokens();
+
+tokens.splice(i,1);
+
+saveTokens(tokens);
+
+render();
+
+}
+
+async function activate(i){
+
+let tokens=getTokens();
+
+let token=tokens[i].token;
+
+await fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+body:"token="+encodeURIComponent(token)
 });
 
-saveTokens(tokens);
-
-document.getElementById("name").value="";
-document.getElementById("token").value="";
-
-setStatus("Token saved.");
-
-loadTokens();
+alert("Token activated");
 
 }
 
-function activate(index){
-
-let tokens=getTokens();
-
-let token=tokens[index].token;
-
-/* 
-This is where your payload would use the token.
-For now we just show it.
-*/
-
-setStatus("Activated token: "+token);
-
-}
-
-function removeToken(index){
-
-let tokens=getTokens();
-
-tokens.splice(index,1);
-
-saveTokens(tokens);
-
-setStatus("Token deleted.");
-
-loadTokens();
-
-}
-
-window.onload=loadTokens;
+render();
 
 </script>
 

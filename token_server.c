@@ -5,164 +5,145 @@
 #include <arpa/inet.h>
 
 #define PORT 9020
-
 #define TOKEN_FILE "/data/bluesphere/bluesphere.txt"
 #define DB_FILE "/data/bluesphere/tokens.db"
 
-void ensure_dirs()
-{
+void ensure_dir(){
 system("mkdir -p /data/bluesphere");
 }
 
-void write_active_token(char *token)
-{
-FILE *f = fopen(TOKEN_FILE,"w");
-
-```
-if(!f) return;
-
+void write_token(char *token){
+FILE *f=fopen(TOKEN_FILE,"w");
+if(!f)return;
 fprintf(f,"%s\n",token);
-
 fclose(f);
-```
-
 }
 
-void add_token(char *name,char *token)
-{
+void add_token(char *name,char *token){
 FILE *f=fopen(DB_FILE,"a");
-
-```
-if(!f) return;
-
+if(!f)return;
 fprintf(f,"%s|%s\n",name,token);
-
 fclose(f);
-```
-
 }
 
-void delete_token(char *token)
-{
-FILE *f=fopen(DB_FILE,"r");
+void delete_token(char *token){
 
-```
-if(!f) return;
+FILE *f=fopen(DB_FILE,"r");
+if(!f)return;
 
 FILE *tmp=fopen("/data/bluesphere/tmp.db","w");
 
 char line[512];
 
-while(fgets(line,sizeof(line),f))
-{
-    if(strstr(line,token)==NULL)
-    fprintf(tmp,"%s",line);
+while(fgets(line,sizeof(line),f)){
+
+if(strstr(line,token)==NULL)
+fprintf(tmp,"%s",line);
+
 }
 
 fclose(f);
 fclose(tmp);
 
 rename("/data/bluesphere/tmp.db",DB_FILE);
-```
-
 }
 
-void send_tokens(int client)
-{
+void send_tokens(int client){
+
 FILE *f=fopen(DB_FILE,"r");
 
-```
-char buffer[4096];
+char response[4096];
 
-strcpy(buffer,"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n[");
+strcpy(response,"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n[");
 
-if(f)
-{
-    char line[512];
-    int first=1;
+if(f){
 
-    while(fgets(line,sizeof(line),f))
-    {
-        char *name=strtok(line,"|");
-        char *token=strtok(NULL,"\n");
+char line[512];
+int first=1;
 
-        if(!first) strcat(buffer,",");
+while(fgets(line,sizeof(line),f)){
 
-        strcat(buffer,"{\"name\":\"");
-        strcat(buffer,name);
-        strcat(buffer,"\",\"token\":\"");
-        strcat(buffer,token);
-        strcat(buffer,"\"}");
+char *name=strtok(line,"|");
+char *token=strtok(NULL,"\n");
 
-        first=0;
-    }
+if(!first)strcat(response,",");
 
-    fclose(f);
+strcat(response,"{"name":"");
+strcat(response,name);
+strcat(response,"","token":"");
+strcat(response,token);
+strcat(response,""}");
+
+first=0;
 }
 
-strcat(buffer,"]");
-
-send(client,buffer,strlen(buffer),0);
-```
+fclose(f);
 
 }
 
-char *get_param(char *data,char *key)
-{
-static char value[256];
+strcat(response,"]");
 
-```
-char *pos=strstr(data,key);
+send(client,response,strlen(response),0);
+}
 
-if(!pos) return NULL;
+char* find_param(char *body,char *key){
 
-pos+=strlen(key)+2;
+static char val[256];
 
-sscanf(pos,"%[^\"]",value);
+char *pos=strstr(body,key);
 
-return value;
-```
+if(!pos)return NULL;
+
+pos+=strlen(key)+1;
+
+sscanf(pos,"%[^&]",val);
+
+return val;
+}
+
+void handle_post(int client,char *buffer,char *path){
+
+char *body=strstr(buffer,"\r\n\r\n");
+
+if(!body)return;
+
+body+=4;
+
+if(strcmp(path,"/add")==0){
+
+char *name=find_param(body,"name");
+char *token=find_param(body,"token");
+
+if(name && token)
+add_token(name,token);
 
 }
 
-void handle_post(int client,char *data,char *path)
-{
-if(strcmp(path,"/add")==0)
-{
-char *name=get_param(data,"name");
-char *token=get_param(data,"token");
+if(strcmp(path,"/set")==0){
 
-```
-    if(name && token)
-    add_token(name,token);
+char *token=find_param(body,"token");
+
+if(token)
+write_token(token);
+
 }
 
-if(strcmp(path,"/set")==0)
-{
-    char *token=get_param(data,"token");
+if(strcmp(path,"/delete")==0){
 
-    if(token)
-    write_active_token(token);
-}
+char *token=find_param(body,"token");
 
-if(strcmp(path,"/delete")==0)
-{
-    char *token=get_param(data,"token");
+if(token)
+delete_token(token);
 
-    if(token)
-    delete_token(token);
 }
 
 send(client,"HTTP/1.1 200 OK\r\n\r\nOK",19,0);
-```
-
 }
 
-int main()
-{
-ensure_dirs();
+int main(){
 
-```
+ensure_dir();
+
 int server_fd,client;
 
 struct sockaddr_in addr;
@@ -179,31 +160,33 @@ listen(server_fd,10);
 
 printf("Token server running on port %d\n",PORT);
 
-while(1)
-{
-    client=accept(server_fd,NULL,NULL);
+while(1){
 
-    char buffer[8192]={0};
+client=accept(server_fd,NULL,NULL);
 
-    recv(client,buffer,sizeof(buffer),0);
+char buffer[8192]={0};
 
-    if(strncmp(buffer,"GET /tokens",11)==0)
-    {
-        send_tokens(client);
-    }
-    else if(strncmp(buffer,"POST ",5)==0)
-    {
-        char path[64];
+recv(client,buffer,sizeof(buffer),0);
 
-        sscanf(buffer,"POST %s",path);
+if(strncmp(buffer,"GET /tokens",11)==0){
 
-        handle_post(client,buffer,path);
-    }
+send_tokens(client);
 
-    close(client);
+}
+
+else if(strncmp(buffer,"POST ",5)==0){
+
+char path[64];
+
+sscanf(buffer,"POST %s",path);
+
+handle_post(client,buffer,path);
+
+}
+
+close(client);
+
 }
 
 return 0;
-```
-
 }

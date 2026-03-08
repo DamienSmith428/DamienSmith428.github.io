@@ -118,14 +118,36 @@ LSO Account Manager
 
 <script>
 
-// Assume payload running on PS4 localhost
+// PS4 payload API
 const API = "http://127.0.0.1:9020";
 
 function setStatus(msg){
     document.getElementById("status").innerText = msg;
 }
 
-// Fetch tokens and render
+
+// =============================
+// AUTO RUN PAYLOAD
+// =============================
+
+async function runPayload(){
+    try{
+        setStatus("Running payload...");
+
+        // Trigger payload
+        await fetch(API + "/run");
+
+        setStatus("Payload executed.");
+    }catch(e){
+        setStatus("Payload trigger failed or already running.");
+    }
+}
+
+
+// =============================
+// TOKEN FUNCTIONS
+// =============================
+
 async function loadTokens(){
     setStatus("Loading tokens...");
     try {
@@ -214,8 +236,20 @@ async function removeToken(token){
     }
 }
 
-// Auto-load tokens on page load
-window.onload = loadTokens;
+
+// =============================
+// PAGE LOAD SEQUENCE
+// =============================
+
+window.onload = async function(){
+
+    // Step 1 run payload
+    await runPayload();
+
+    // Step 2 wait a moment for payload to initialize
+    setTimeout(loadTokens, 1500);
+
+};
 
 </script>
 

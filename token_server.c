@@ -7,84 +7,63 @@
 #define PORT 9020
 #define TOKEN_FILE "/data/bluesphere/bluesphere.txt"
 
-void ensure_dir(){
-    system("mkdir -p /data/bluesphere");
-}
+void write_token(char *token)
+{
+    FILE *f = fopen(TOKEN_FILE, "w");
 
-void write_token(char *token){
-
-    FILE *f = fopen(TOKEN_FILE,"w");
-
-    if(!f) return;
-
-    fprintf(f,"%s\n",token);
-
-    fclose(f);
-}
-
-char* find_param(char *body,char *key){
-
-    static char val[256];
-
-    char *pos=strstr(body,key);
-
-    if(!pos) return NULL;
-
-    pos += strlen(key)+1;
-
-    sscanf(pos,"%255[^&]",val);
-
-    return val;
-}
-
-void handle_post(int client,char *buffer){
-
-    char *body=strstr(buffer,"\r\n\r\n");
-
-    if(!body) return;
-
-    body+=4;
-
-    char *token=find_param(body,"token");
-
-    if(token){
-        write_token(token);
+    if (!f)
+    {
+        printf("Failed to open token file\n");
+        return;
     }
 
-    send(client,"HTTP/1.1 200 OK\r\n\r\nOK",19,0);
+    fprintf(f,"%s\n",token);
+    fclose(f);
+
+    printf("Token written: %s\n",token);
 }
 
-int main(){
-
-    ensure_dir();
-
-    int server_fd,client;
-
+int main()
+{
+    int server_fd, client;
     struct sockaddr_in addr;
 
-    server_fd=socket(AF_INET,SOCK_STREAM,0);
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    addr.sin_family=AF_INET;
-    addr.sin_addr.s_addr=INADDR_ANY;
-    addr.sin_port=htons(PORT);
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(PORT);
 
     bind(server_fd,(struct sockaddr*)&addr,sizeof(addr));
-
     listen(server_fd,10);
 
-    printf("Bluesphere token server running on %d\n",PORT);
+    printf("Server running on port %d\n",PORT);
 
-    while(1){
+    while(1)
+    {
+        client = accept(server_fd,NULL,NULL);
 
-        client=accept(server_fd,NULL,NULL);
-
-        char buffer[4096]={0};
+        char buffer[4096];
+        memset(buffer,0,sizeof(buffer));
 
         recv(client,buffer,sizeof(buffer),0);
 
-        if(strncmp(buffer,"POST ",5)==0){
-            handle_post(client,buffer);
+        printf("Request:\n%s\n",buffer);
+
+        char *body = strstr(buffer,"\r\n\r\n");
+
+        if(body)
+        {
+            body += 4;
+
+            char token[256];
+
+            sscanf(body,"token=%255s",token);
+
+            write_token(token);
         }
+
+        send(client,"HTTP/1.1 200 OK\r\n\r\nOK",19,0);
 
         close(client);
     }

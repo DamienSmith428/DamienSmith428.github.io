@@ -289,25 +289,32 @@ async function loadNotifications() {
         <div class="notif-time">${n.created_at}</div>
         <div class="notif-btns">
           ${isReset && n.reset_code
-            ? `<button class="btn btn-green btn-sm" onclick="issueCode('${n.username}','${n.reset_code}',${n.id})">📋 Copy Code &amp; Resolve</button>`
+            ? `<button class="btn btn-primary btn-sm" onclick="copyCode('${n.reset_code}')">📋 Copy Code</button>
+               <button class="btn btn-green btn-sm" onclick="resolveNotif(${n.id})">✓ Mark Resolved</button>`
             : `<button class="btn btn-ghost btn-sm" onclick="resolveNotif(${n.id})">✓ Mark Resolved</button>`
           }
-          <button class="btn btn-red btn-sm" onclick="resolveNotif(${n.id})">✕ Deny / Dismiss</button>
+          <button class="btn btn-red btn-sm" onclick="denyNotif(${n.id})">✕ Deny / Dismiss</button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-function issueCode(username, code, nid) {
+function copyCode(code) {
   navigator.clipboard.writeText(code).catch(() => {});
-  flash(`Code for ${username}: ${code} — copied!`, 'ok');
-  resolveNotif(nid);
+  flash(`Code copied: ${code} — send this to the user. Click "Mark Resolved" once they've used it.`, 'ok');
 }
 
 async function resolveNotif(id) {
-  const d = await api('POST', '/api/admin/resolve_notification', { notification_id: id });
-  if (d) { flash('Notification resolved'); loadNotifications(); }
+  // Marks notification done but keeps the reset code alive so user can still use it
+  const d = await api('POST', '/api/admin/resolve_notification', { notification_id: id, deny: false });
+  if (d) { flash('Notification resolved — reset code still active for user'); loadNotifications(); }
+}
+
+async function denyNotif(id) {
+  // Dismisses notification AND deletes the reset request so the code is cancelled
+  const d = await api('POST', '/api/admin/resolve_notification', { notification_id: id, deny: true });
+  if (d) { flash('Request denied — reset code cancelled'); loadNotifications(); }
 }
 
 // ── User profile modal ──────────────────────────────────────────────

@@ -6,7 +6,7 @@
    OR leave blank and configure it on the Settings page.
 ═══════════════════════════════════════════════════════════════ */
 
-let API_BASE = localStorage.getItem('na_url') || '';
+let API_BASE = localStorage.getItem('na_url') || 'https://ps4-pkg-mngr.onrender.com';
 
 // ── State ──────────────────────────────────────────────────────────
 let TOKEN    = localStorage.getItem('na_tok')  || '';

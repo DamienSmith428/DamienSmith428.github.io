@@ -505,6 +505,15 @@ async function deleteUser(username) {
   if (d) { flash(`${username} deleted`); closeProfile(); loadUsers(); }
 }
 
+// ── Sidebar toggle (mobile) ────────────────────────────────────────
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen  = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', !isOpen);
+  overlay.classList.toggle('open', !isOpen);
+}
+
 // ── Navigation ──────────────────────────────────────────────────────
 function goTo(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -513,6 +522,11 @@ function goTo(page) {
   const n = document.getElementById(`nav-${page}`);
   if (p) p.classList.add('active');
   if (n) n.classList.add('active');
+  // Close sidebar on mobile after tapping a nav item
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (sidebar) sidebar.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
 }
 
 // ── Settings ────────────────────────────────────────────────────────

@@ -297,6 +297,158 @@
     /* ── Progress ────────────────────────────────────────── */
     .prog { height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden; margin: 5px 0 10px; }
     .prog-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--electric), var(--cyan)); transition: width 1s ease; }
+
+    /* ── Hamburger (mobile only) ─────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      background: transparent;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 20px; height: 2px;
+      background: var(--text-dim);
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+
+    /* ── Mobile sidebar overlay ──────────────────────────── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(2,4,10,0.7);
+      z-index: 200;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.open { display: block; }
+
+    /* ── Table scroll wrapper ────────────────────────────── */
+    .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* ════════════════════════════════════════════════════════
+       MOBILE STYLES  (≤ 768px)
+    ════════════════════════════════════════════════════════ */
+    @media (max-width: 768px) {
+
+      /* Body scrolls on mobile */
+      body { overflow: auto; height: auto; }
+      html { overflow: auto; height: auto; }
+
+      /* Shell becomes normal flow, not fixed height */
+      .shell, .shell.visible {
+        display: flex !important;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      /* Top bar — compact */
+      .topbar { padding: 0 14px; gap: 10px; height: 52px; flex-shrink: 0; }
+      .topbar-sep  { display: none; }
+      .topbar-label { display: none; }
+      .topbar-brand { font-size: 13px; }
+      .topbar-user { padding: 4px 8px; }
+      .topbar-tier { display: none; }
+      .topbar-right { gap: 8px; }
+      .topbar-right .btn { display: none; } /* hide logout — in sidebar on mobile */
+
+      /* Show hamburger */
+      .hamburger { display: flex; }
+
+      /* Body split — no grid, content fills */
+      .body-split {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: visible;
+      }
+
+      /* Sidebar — slides in from left as overlay on mobile */
+      .sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 260px;
+        z-index: 300;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        padding-top: 60px;
+        border-right: 1px solid var(--border-bright);
+        box-shadow: 4px 0 30px #00000080;
+      }
+      .sidebar.open { transform: translateX(0); }
+
+      /* Sidebar close button */
+      .sidebar-close {
+        position: absolute;
+        top: 14px; right: 14px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text-dim);
+        font-size: 16px;
+        padding: 4px 10px;
+        cursor: pointer;
+      }
+
+      /* Content fills screen */
+      .content {
+        flex: 1;
+        overflow: visible;
+        padding: 16px 14px 80px;
+      }
+
+      /* Stats — 2 cols on mobile */
+      .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .sc-val { font-size: 22px; }
+
+      /* Two-col becomes one-col */
+      .two-col { grid-template-columns: 1fr; }
+
+      /* Page header stacks */
+      .pg-hdr { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .pg-hdr > div:last-child { width: 100%; display: flex; gap: 8px; }
+      .pg-hdr .inp { flex: 1; }
+
+      /* Tables scroll horizontally */
+      .panel-body.no-pad { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .tbl { min-width: 480px; }
+
+      /* Modal fills screen on mobile */
+      .modal {
+        width: calc(100vw - 24px);
+        max-width: 100%;
+        max-height: 92vh;
+        margin: 0 12px;
+      }
+
+      /* Flash wraps on mobile */
+      #flash { white-space: normal; width: calc(100% - 32px); text-align: center; }
+
+      /* Login box full width */
+      .login-box { width: calc(100% - 32px); max-width: 380px; }
+
+      /* Settings max-width */
+      .page#page-settings > div { max-width: 100%; }
+
+      /* Notification buttons wrap */
+      .notif-btns { flex-wrap: wrap; }
+    }
+
+    /* ════════════════════════════════════════════════════════
+       SMALL PHONES  (≤ 400px)
+    ════════════════════════════════════════════════════════ */
+    @media (max-width: 400px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .sc { padding: 12px; }
+      .sc-val { font-size: 20px; }
+      .topbar-brand span:not(.lm) { display: none; } /* hide text, keep logo mark */
+    }
   </style>
 </head>
 <body>
@@ -345,6 +497,9 @@
 
     <!-- Top bar -->
     <div class="topbar">
+      <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
       <div class="topbar-brand">
         <div class="lm">P4</div>
         PS4 PKG Manager
@@ -370,8 +525,12 @@
     <!-- Body -->
     <div class="body-split">
 
+      <!-- Sidebar overlay tap-to-close (mobile) -->
+      <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
       <!-- Sidebar -->
-      <div class="sidebar">
+      <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
         <div class="sidebar-sec">Overview</div>
         <div class="nav-item active" id="nav-overview" onclick="goTo('overview')">
           <span class="ni">📊</span> Dashboard
@@ -397,6 +556,9 @@
         <div class="sidebar-sec">System</div>
         <div class="nav-item" id="nav-settings" onclick="goTo('settings')">
           <span class="ni">⚙️</span> Settings
+        </div>
+        <div class="nav-item" onclick="doLogout()" style="margin-top:4px;color:var(--red)">
+          <span class="ni">🚪</span> Sign Out
         </div>
       </div>
 

@@ -41,129 +41,123 @@ function animateCounter(el, target, duration = 1000) {
 const tickets = [
   {
     id: 'TKT-0041',
-    title: 'HWID locked to old PC after reinstall',
+    title: 'API returning 401 on /api/verify after login',
     status: 'open',
     priority: 'high',
-    user: 'darkwolf92',
-    email: 'darkwolf92@email.com',
-    app: 'ScriptGuard Pro',
-    created: '2 hours ago',
+    user: 'raj_p',
+    email: 'raj@codelab.dev',
+    app: 'AutoScript Pro (Indie Plan)',
+    created: '1 hour ago',
     updated: '14 min ago',
-    preview: 'I reformatted my PC and now my license is locked...',
+    preview: 'Getting consistent 401 errors on verify immediately after...',
     messages: [
       {
         from: 'user',
-        name: 'darkwolf92',
-        time: '2 hours ago',
-        text: "Hey, I reformatted my PC and reinstalled Windows. Now when I try to launch the app it says my HWID is locked to a different machine. I paid for a full license last month. Can you reset my HWID? My order ID is NX-2847."
+        name: 'raj_p',
+        time: '1 hour ago',
+        text: "Hey, I'm getting consistent 401 errors on /api/verify immediately after a successful login. The login response gives me a token, I store it, then the very next verify call rejects it. Using the Python client SDK on Windows. This is blocking my beta launch."
       },
       {
         from: 'staff',
         name: 'NexAuth Support',
-        time: '1 hour ago',
-        text: "Hi! Thanks for reaching out. I can see your account and full license is active — totally understandable issue after a reinstall. I've gone ahead and reset your HWID. You should be able to launch the app now on your new machine. The new hardware fingerprint will be locked in on your next successful launch. Let me know if you run into anything else! 🎉"
+        time: '45 min ago',
+        text: "Hi Raj! Thanks for the detailed report. This is almost always a clock skew issue — if your machine's system clock is off by more than a few seconds from UTC, the JWT signature validation fails because the 'issued at' timestamp looks wrong to the server. Can you check what your system clock shows vs actual UTC time? You can run `python -c \"import datetime; print(datetime.datetime.utcnow())`  and compare to time.is/UTC."
       },
       {
         from: 'user',
-        name: 'darkwolf92',
-        time: '45 min ago',
-        text: "That worked perfectly, thank you so much! One more thing — is there a way to see which apps are using my license key? Just want to keep track."
+        name: 'raj_p',
+        time: '30 min ago',
+        text: "Oh wow — my dev machine was 6 minutes behind! Synced NTP and everything works perfectly now. Feeling a bit silly but glad it was an easy fix. Is there anything on NexAuth's end that could help detect this and give a more descriptive error?"
       },
       {
         from: 'staff',
         name: 'NexAuth Support',
         time: '14 min ago',
-        text: "Great to hear! And yes — if you head to your customer dashboard and click on your license, you'll see a full breakdown of which apps it's registered to, your HWID fingerprint, and your activation history. If you ever need another HWID reset in the future you can also self-serve it from there after a 7-day cooldown."
+        text: "Ha, it catches everyone at least once! Great suggestion — I've actually added it to our roadmap to return a more descriptive error when we detect likely clock skew. For now I've added a note to our docs troubleshooting section. Good luck with the beta launch! 🚀"
       }
     ]
   },
   {
     id: 'TKT-0040',
-    title: 'Trial extension request — demo for client',
+    title: 'HWID reset needed — developer got a new machine',
     status: 'pending',
     priority: 'medium',
-    user: 'velocity_dev',
-    email: 'dev@velocitystudio.io',
-    app: 'VaultAuth SDK',
-    created: '5 hours ago',
-    updated: '3 hours ago',
-    preview: 'We are evaluating NexAuth for a project at my studio...',
+    user: 'marcus_dev',
+    email: 'dev@myapp.io',
+    app: 'AutoScript Pro',
+    created: '3 hours ago',
+    updated: '2 hours ago',
+    preview: 'One of my premium users got a new PC and can\'t log in...',
     messages: [
       {
         from: 'user',
-        name: 'velocity_dev',
-        time: '5 hours ago',
-        text: "Hi, we are a small game dev studio evaluating NexAuth for a project. Our 7-day trial expires tomorrow but we're in the middle of a client demo next week. Any chance of a short extension? We're very likely to convert to paid — just need a bit more time to finish integration testing."
+        name: 'marcus_dev',
+        time: '3 hours ago',
+        text: "One of my premium end-users got a new PC and now they can't log in — it's showing 'HWID mismatch'. I reset it from the admin panel inside my app but they say they're still getting the error. Am I doing something wrong?"
       },
       {
         from: 'staff',
         name: 'NexAuth Support',
-        time: '3 hours ago',
-        text: "Hey! Love to hear you're integrating NexAuth into your studio's workflow. I've extended your trial by 14 days — no problem at all. Good luck with the client demo! If you have any integration questions our docs are at nexauth.dev/docs and I'm happy to jump on a live chat if you need help with anything specific."
+        time: '2 hours ago',
+        text: "Hey Marcus! The HWID reset from your admin panel should work instantly — the new fingerprint gets registered on their very next login attempt. A couple things to check: 1) Make sure they fully closed and re-opened your app after the reset (not just minimized), and 2) Confirm the reset actually saved — in your admin panel, open their user profile and check if HWID shows as 'Reset / Pending' or still shows a fingerprint. Let me know what you see!"
       }
     ]
   },
   {
     id: 'TKT-0038',
-    title: 'API returning 401 on verify endpoint',
+    title: 'How do I integrate NexAuth with a C# WPF app?',
     status: 'resolved',
-    priority: 'high',
-    user: 'codebreaker_x',
-    email: 'x@codebreaker.dev',
-    app: 'Custom Integration',
-    created: '1 day ago',
-    updated: '20 hours ago',
-    preview: 'Getting consistent 401 errors on /api/verify...',
+    priority: 'low',
+    user: 'toolsmith_dev',
+    email: 'hello@toolsmith.app',
+    app: 'DataVault Desktop (Starter Plan)',
+    created: '2 days ago',
+    updated: '1 day ago',
+    preview: 'I\'m building a WPF desktop app in C# and want to use NexAuth...',
     messages: [
       {
         from: 'user',
-        name: 'codebreaker_x',
-        time: '1 day ago',
-        text: "Getting consistent 401 errors on /api/verify after tokens that are less than 5 minutes old. The tokens work fine when I test them on /api/login immediately after issuing, but subsequent verify calls fail. Using Python requests library."
+        name: 'toolsmith_dev',
+        time: '2 days ago',
+        text: "I'm building a WPF desktop app in C# and want to use NexAuth for user authentication and licensing. The docs show Python examples — is there a C# SDK or do I need to call the REST API directly? I just need login, verify, and tier checking."
       },
       {
         from: 'staff',
         name: 'NexAuth Support',
-        time: '22 hours ago',
-        text: "Thanks for the detailed report. This sounds like a JWT clock skew issue — if your server's clock is off by more than a few seconds it can cause tokens to fail verification prematurely. Can you paste the token payload (you can decode it at jwt.io) and tell me what timezone your server is set to?"
+        time: '1 day ago',
+        text: "Great question! There's no official C# SDK yet (it's on the roadmap) but the REST API is super straightforward to call from C#. Here's what you need:\n\n1. POST /api/login with {username, password} → get back token + tier\n2. GET /api/verify with Authorization: Bearer {token} → check tier on startup\n3. Store the token in your app settings\n\nYou can use HttpClient in .NET for all of this. The verify call is the only one you need regularly — call it on startup and then cache the tier locally. I'll DM you a small C# example that covers login + verify + tier gating. Check your email!"
       },
       {
         from: 'user',
-        name: 'codebreaker_x',
-        time: '21 hours ago',
-        text: "Oh wow. My dev machine clock was 4 minutes behind. Synced NTP and everything works perfectly now. That was embarrassing. Thanks!"
-      },
-      {
-        from: 'staff',
-        name: 'NexAuth Support',
-        time: '20 hours ago',
-        text: "Ha, classic NTP issue! Happens to everyone. Marking this resolved but I'll add a note to our docs about clock sync since it comes up occasionally. Glad you're up and running! ✅"
+        name: 'toolsmith_dev',
+        time: '1 day ago',
+        text: "The example was perfect, got it working in about an hour. Would love an official C# SDK eventually but the REST approach works great. Thanks!"
       }
     ]
   },
   {
     id: 'TKT-0035',
-    title: 'How do I set up tiered licensing?',
+    title: 'Upgrade to Pro — need more than 1,000 users',
     status: 'resolved',
-    priority: 'low',
-    user: 'indie_launcher',
-    email: 'hello@indielauncher.gg',
-    app: 'GameLauncher v2',
-    created: '2 days ago',
+    priority: 'medium',
+    user: 'sarah_k',
+    email: 'sarah@velocitystudio.io',
+    app: 'Multiple (Studio Plan)',
+    created: '3 days ago',
     updated: '2 days ago',
-    preview: 'I want to have free, basic, and pro tiers...',
+    preview: 'We\'re approaching our 1,000 user limit on Indie...',
     messages: [
       {
         from: 'user',
-        name: 'indie_launcher',
-        time: '2 days ago',
-        text: "Hey! Love the product so far. I want to set up three tiers: free, basic ($5/mo), and pro ($15/mo). Each unlocks different features in my launcher. What's the best way to structure this with NexAuth?"
+        name: 'sarah_k',
+        time: '3 days ago',
+        text: "Hi, we're a small game dev studio and we're approaching our 1,000 user limit on the Indie plan across our apps. We also need more than 3 apps. Looking at upgrading to Studio — is there any way to do that mid-billing-cycle without losing any data or having downtime?"
       },
       {
         from: 'staff',
         name: 'NexAuth Support',
         time: '2 days ago',
-        text: "Perfect use case for NexAuth tiers! Here's the recommended setup:\n\n1. In your admin panel, you have free, premium, and admin tiers built in\n2. Map: free → your Free tier, premium → Basic, admin → Pro (or use redeem codes for Pro)\n3. In your app, check auth.current_tier and gate features accordingly\n4. Use the trial system for free trials of paid tiers\n\nCheck out the docs at /docs for code examples — the 'Tier Gating' section has exactly what you need."
+        text: "Congrats on the growth! Upgrading is completely seamless — zero downtime, no data migration, nothing changes on your users' end. Your existing deployments, users, and configurations all stay exactly as they are. You'll just unlock higher limits instantly. I've gone ahead and processed your upgrade to Studio in the billing system. Your apps are now on unlimited users and unlimited deployments. Welcome to Studio! 🎉"
       }
     ]
   }

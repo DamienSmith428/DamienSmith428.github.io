@@ -9,7 +9,6 @@
     .docs-layout {
       display: grid;
       grid-template-columns: 260px 1fr;
-      gap: 0;
       min-height: 100vh;
       padding-top: 64px;
     }
@@ -22,121 +21,40 @@
       padding: 32px 0;
       background: var(--bg-deep);
     }
-    .docs-sidebar-section {
-      padding: 0 24px;
-      margin-bottom: 32px;
-    }
-    .docs-sidebar-title {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-    .docs-sidebar-link {
-      display: block;
-      padding: 7px 12px;
-      border-radius: var(--radius);
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 13px;
-      transition: all 0.15s;
-      margin-bottom: 2px;
-    }
+    .docs-sidebar-section { padding: 0 24px; margin-bottom: 28px; }
+    .docs-sidebar-title { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+    .docs-sidebar-link { display: block; padding: 7px 12px; border-radius: var(--radius); color: var(--text-dim); text-decoration: none; font-size: 13px; transition: all 0.15s; margin-bottom: 2px; }
     .docs-sidebar-link:hover { background: var(--bg-elevated); color: var(--text-hi); }
     .docs-sidebar-link.active { background: var(--cyan-glow); color: var(--cyan); border: 1px solid #00d4ff30; }
-    .docs-content {
-      padding: 48px 80px 120px;
-      max-width: 860px;
-    }
-    .docs-content h1 {
-      font-family: var(--font-display);
-      font-size: 42px;
-      font-weight: 800;
-      color: var(--text-hi);
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-    .docs-content h2 {
-      font-family: var(--font-display);
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--text-hi);
-      margin: 56px 0 16px;
-      padding-top: 56px;
-      border-top: 1px solid var(--border);
-    }
+
+    .docs-content { padding: 48px 80px 120px; max-width: 860px; }
+    .docs-content h1 { font-family: var(--font-display); font-size: 42px; font-weight: 800; color: var(--text-hi); letter-spacing: -0.02em; margin-bottom: 16px; }
+    .docs-content h2 { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--text-hi); margin: 56px 0 16px; padding-top: 56px; border-top: 1px solid var(--border); }
     .docs-content h2:first-of-type { border-top: none; padding-top: 0; margin-top: 40px; }
-    .docs-content h3 {
-      font-family: var(--font-display);
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-hi);
-      margin: 32px 0 12px;
-    }
-    .docs-content p {
-      color: var(--text-dim);
-      line-height: 1.8;
-      margin-bottom: 16px;
-      font-size: 14px;
-    }
+    .docs-content h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text-hi); margin: 32px 0 12px; }
+    .docs-content p { color: var(--text-dim); line-height: 1.8; margin-bottom: 16px; font-size: 14px; }
     .docs-content strong { color: var(--text-hi); }
-    .docs-content code {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 2px 7px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--cyan);
-    }
-    .docs-content ul, .docs-content ol {
-      color: var(--text-dim);
-      font-size: 14px;
-      line-height: 1.8;
-      padding-left: 24px;
-      margin-bottom: 16px;
-    }
+    .docs-content code { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; font-family: var(--font-mono); font-size: 12px; color: var(--cyan); }
+    .docs-content ul, .docs-content ol { color: var(--text-dim); font-size: 14px; line-height: 1.8; padding-left: 24px; margin-bottom: 16px; }
     .docs-content li { margin-bottom: 6px; }
     .docs-content a { color: var(--cyan); text-decoration: none; }
     .docs-content a:hover { text-decoration: underline; }
-    .callout {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--cyan);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      margin: 24px 0;
-      font-size: 13px;
-    }
+    .callout { background: var(--bg-panel); border: 1px solid var(--border); border-left: 3px solid var(--cyan); border-radius: var(--radius); padding: 16px 20px; margin: 24px 0; font-size: 13px; color: var(--text-dim); line-height: 1.8; }
     .callout.warn { border-left-color: var(--amber); }
-    .callout.info { border-left-color: var(--electric); }
-    .callout-title { font-weight: 700; color: var(--text-hi); margin-bottom: 6px; }
-    .method-badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--font-mono);
-      margin-right: 10px;
-    }
-    .method-get  { background: #00ff8820; color: var(--green); }
-    .method-post { background: #0066ff20; color: var(--electric); }
-    .method-del  { background: #ff335520; color: var(--red); }
-    .endpoint-row {
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .callout.success { border-left-color: var(--green); }
+    .callout-title { font-weight: 700; color: var(--text-hi); margin-bottom: 6px; font-family: var(--font-display); }
+    .method-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; font-family: var(--font-mono); margin-right: 10px; }
+    .get  { background: #00ff8820; color: var(--green); }
+    .post { background: #0066ff20; color: var(--electric); }
+    .del  { background: #ff335520; color: var(--red); }
+    .endpoint-row { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
     .endpoint-path { font-family: var(--font-mono); font-size: 13px; color: var(--text-hi); flex: 1; }
     .endpoint-desc { font-size: 12px; color: var(--text-dim); }
+    .lang-tab-row { display: flex; gap: 8px; margin-bottom: 0; }
+    .lang-tab { padding: 8px 16px; border-radius: var(--radius) var(--radius) 0 0; border: 1px solid var(--border); border-bottom: none; background: var(--bg-elevated); color: var(--text-dim); font-family: var(--font-mono); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .lang-tab.active { background: var(--bg-void); color: var(--cyan); border-color: var(--border-bright); }
+    .lang-block { display: none; }
+    .lang-block.active { display: block; }
   </style>
 </head>
 <body>
@@ -153,11 +71,11 @@
       <li><a href="index.html#features">Features</a></li>
       <li><a href="index.html#pricing">Pricing</a></li>
       <li><a href="docs.html" style="color:var(--cyan)">Docs</a></li>
-      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="dashboard.html">Demo</a></li>
     </ul>
     <div class="nav-cta">
       <a href="dashboard.html" class="btn btn-ghost btn-sm">Sign In</a>
-      <a href="dashboard.html" class="btn btn-primary btn-sm">Get Started Free</a>
+      <a href="index.html#pricing" class="btn btn-primary btn-sm">Get Started Free</a>
     </div>
   </nav>
 
@@ -165,29 +83,33 @@
     <aside class="docs-sidebar">
       <div class="docs-sidebar-section">
         <div class="docs-sidebar-title">Getting Started</div>
-        <a href="#quickstart" class="docs-sidebar-link active">Quick Start</a>
-        <a href="#installation" class="docs-sidebar-link">Installation</a>
-        <a href="#configuration" class="docs-sidebar-link">Configuration</a>
-        <a href="#deploy" class="docs-sidebar-link">Deploy to Render</a>
+        <a href="#overview" class="docs-sidebar-link active">Overview</a>
+        <a href="#quickstart" class="docs-sidebar-link">Quick Start</a>
+        <a href="#deploy" class="docs-sidebar-link">Deploy Your Backend</a>
+        <a href="#integrate" class="docs-sidebar-link">Integrate the Client</a>
       </div>
       <div class="docs-sidebar-section">
         <div class="docs-sidebar-title">Core Concepts</div>
-        <a href="#tiers" class="docs-sidebar-link">Tiers & Licensing</a>
+        <a href="#how-auth-works" class="docs-sidebar-link">How Auth Works</a>
+        <a href="#tiers" class="docs-sidebar-link">Tiers & Access Control</a>
         <a href="#sessions" class="docs-sidebar-link">Sessions & JWT</a>
         <a href="#hwid" class="docs-sidebar-link">HWID Locking</a>
-        <a href="#trials" class="docs-sidebar-link">Trial Management</a>
+        <a href="#trials" class="docs-sidebar-link">Trials & Upgrades</a>
+        <a href="#admin-panel" class="docs-sidebar-link">Admin Panel</a>
       </div>
       <div class="docs-sidebar-section">
         <div class="docs-sidebar-title">API Reference</div>
         <a href="#api-auth" class="docs-sidebar-link">Authentication</a>
         <a href="#api-admin" class="docs-sidebar-link">Admin Endpoints</a>
         <a href="#api-profile" class="docs-sidebar-link">Profile</a>
+        <a href="#api-errors" class="docs-sidebar-link">Error Codes</a>
       </div>
       <div class="docs-sidebar-section">
         <div class="docs-sidebar-title">Guides</div>
-        <a href="#tier-gating" class="docs-sidebar-link">Tier Gating</a>
-        <a href="#password-reset" class="docs-sidebar-link">Password Resets</a>
-        <a href="#examples" class="docs-sidebar-link">Examples</a>
+        <a href="#tier-gating" class="docs-sidebar-link">Gating Features</a>
+        <a href="#payment-flow" class="docs-sidebar-link">Payment Flows</a>
+        <a href="#hwid-guide" class="docs-sidebar-link">Setting Up HWID</a>
+        <a href="#examples" class="docs-sidebar-link">Code Examples</a>
       </div>
     </aside>
 
@@ -195,230 +117,364 @@
       <div class="tag tag-cyan mb-16">Documentation</div>
       <h1>NexAuth Docs</h1>
       <p style="font-size:16px;color:var(--text)">
-        Everything you need to add production-grade licensing, authentication, and user management to your Python desktop app.
+        Everything you need to add user accounts, licensing tiers, and access control
+        to your software. NexAuth works with any language or platform that can make HTTP requests.
       </p>
 
-      <div class="callout">
-        <div class="callout-title">⚡ 5-minute Quick Start</div>
-        NexAuth is designed to be dropped into any existing Python project. Most developers are up and running before they finish reading this page.
+      <div class="callout success">
+        <div class="callout-title">⚡ 5-minute setup</div>
+        Deploy your backend with one click, add two files to your project, set your server URL.
+        Your app has real user accounts and tier-based access control before your coffee gets cold.
       </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>
+        NexAuth is a <strong>hosted auth and licensing backend</strong> you deploy once and integrate
+        into any software project. Here's the full picture of how it works:
+      </p>
+      <ul>
+        <li><strong>You</strong> are a developer who wants user accounts and access control in your app</li>
+        <li><strong>Your end-users</strong> are the people who use your software — they register and log in inside your app</li>
+        <li><strong>NexAuth</strong> is the backend that handles everything between them: authentication, session tokens, tier checks, HWID verification, and admin controls</li>
+        <li><strong>Your admin panel</strong> is embedded inside your own app — you manage your users without ever leaving your software</li>
+      </ul>
+      <p>
+        NexAuth never appears to your end-users. Your app shows your login screen, your branding,
+        your experience. NexAuth is invisible infrastructure.
+      </p>
 
       <h2 id="quickstart">Quick Start</h2>
-      <h3>1. Deploy Your Backend</h3>
-      <p>Click the button below to deploy your NexAuth backend to Render. This creates a Flask server + PostgreSQL database automatically.</p>
-      <div style="margin:20px 0">
-        <a href="#" class="btn btn-primary">Deploy to Render →</a>
-      </div>
-      <p>After deploying, copy your app URL (e.g. <code>https://my-app.onrender.com</code>). You'll need it next.</p>
 
-      <h3>2. Add Files to Your Project</h3>
-      <p>Download and add these two files to your project directory:</p>
-      <div class="code-block">
-        <div class="code-header">
-          <div class="code-dot" style="background:#ff5f57"></div>
-          <div class="code-dot" style="background:#ffbd2e"></div>
-          <div class="code-dot" style="background:#28c941"></div>
-          <span style="color:var(--text-muted);font-size:12px">Terminal</span>
-        </div>
-<span class="c-comment"># Download the NexAuth client files</span>
-<span class="c-func">curl</span> -O https://nexauth.dev/client/auth.py
-<span class="c-func">curl</span> -O https://nexauth.dev/client/login_window.py
-      </div>
+      <h3>Step 1 — Deploy your backend</h3>
+      <p>
+        Click the Render deploy button from your NexAuth dashboard. This creates:
+      </p>
+      <ul>
+        <li>A dedicated Flask auth server running at <code>https://your-app-name.onrender.com</code></li>
+        <li>A dedicated PostgreSQL database for your end-users' data</li>
+        <li>Automatic SSL, environment configuration, and database migrations</li>
+      </ul>
+      <p>Copy your app URL — you'll need it in the next step.</p>
 
-      <h3>3. Configure and Integrate</h3>
+      <h3>Step 2 — Get the client files</h3>
+      <p>Download the NexAuth client SDK for your language from your dashboard. The Python SDK comes as two files:</p>
       <div class="code-block">
-        <div class="code-header">
-          <div class="code-dot" style="background:#ff5f57"></div>
-          <div class="code-dot" style="background:#ffbd2e"></div>
-          <div class="code-dot" style="background:#28c941"></div>
-          <span style="color:var(--text-muted);font-size:12px">auth.py — Edit line 12</span>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+          <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#ffbd2e"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#28c941"></div>
+          <span style="color:var(--text-muted);font-size:12px;margin-left:4px">Terminal</span>
         </div>
-<span class="c-var">API_BASE</span> = <span class="c-string">"https://your-app.onrender.com"</span>
+<span class="c-comment"># Copy these two files into your project folder</span>
+auth.py          <span class="c-comment"># Auth logic, session management, API calls</span>
+login_window.py  <span class="c-comment"># Ready-made login/register UI component</span>
       </div>
 
+      <h3>Step 3 — Configure your server URL</h3>
       <div class="code-block">
-        <div class="code-header">
-          <div class="code-dot" style="background:#ff5f57"></div>
-          <div class="code-dot" style="background:#ffbd2e"></div>
-          <div class="code-dot" style="background:#28c941"></div>
-          <span style="color:var(--text-muted);font-size:12px">your_app.py</span>
-        </div>
+<span class="c-comment"># In auth.py, line 12 — set your backend URL</span>
+<span class="c-var">API_BASE</span> = <span class="c-string">"https://your-app-name.onrender.com"</span>
+      </div>
+
+      <h3>Step 4 — Integrate into your app</h3>
+      <div class="lang-tab-row">
+        <div class="lang-tab active" onclick="switchLang(this,'py')">Python</div>
+        <div class="lang-tab" onclick="switchLang(this,'cs')">C#</div>
+        <div class="lang-tab" onclick="switchLang(this,'js')">JavaScript</div>
+        <div class="lang-tab" onclick="switchLang(this,'rest')">REST (any language)</div>
+      </div>
+      <div class="lang-block active" data-lang="py">
+        <div class="code-block" style="border-top:none;border-radius:0 var(--radius) var(--radius) var(--radius)">
 <span class="c-keyword">import</span> <span class="c-func">auth</span>
 <span class="c-keyword">import</span> <span class="c-func">login_window</span>
 
-<span class="c-comment"># On startup — show login if no session</span>
+<span class="c-comment"># On startup — restore session or show login</span>
 <span class="c-keyword">if not</span> <span class="c-var">auth</span>.<span class="c-func">try_restore_session</span>():
-    <span class="c-var">login_window</span>.<span class="c-func">show</span>(root.withdraw, show_main, root)
+    <span class="c-var">login_window</span>.<span class="c-func">show</span>(root.withdraw, on_login_success, root)
 
-<span class="c-comment"># Gate features by tier</span>
+<span class="c-comment"># Gate features anywhere in your app</span>
 <span class="c-keyword">if</span> <span class="c-var">auth</span>.<span class="c-func">is_premium</span>():
-    <span class="c-func">show_premium_features</span>()
+    <span class="c-func">enable_premium_tab</span>()
 
 <span class="c-keyword">if</span> <span class="c-var">auth</span>.<span class="c-func">is_admin</span>():
     <span class="c-func">show_admin_panel</span>()
+
+<span class="c-comment"># Read current user info</span>
+<span class="c-func">print</span>(<span class="c-var">auth</span>.current_user)   <span class="c-comment"># "username"</span>
+<span class="c-func">print</span>(<span class="c-var">auth</span>.current_tier)   <span class="c-comment"># "free" | "premium" | "admin"</span>
+        </div>
+      </div>
+      <div class="lang-block" data-lang="cs">
+        <div class="code-block" style="border-top:none;border-radius:0 var(--radius) var(--radius) var(--radius)">
+<span class="c-comment">// Call the NexAuth REST API from any .NET app</span>
+<span class="c-keyword">var</span> client = <span class="c-keyword">new</span> <span class="c-func">HttpClient</span>();
+client.DefaultRequestHeaders.Add(<span class="c-string">"Authorization"</span>, <span class="c-string">$"Bearer {token}"</span>);
+
+<span class="c-keyword">var</span> response = <span class="c-keyword">await</span> client.<span class="c-func">GetAsync</span>(<span class="c-string">"https://your-app.onrender.com/api/verify"</span>);
+<span class="c-keyword">var</span> data = <span class="c-keyword">await</span> response.Content.<span class="c-func">ReadFromJsonAsync</span>&lt;<span class="c-func">VerifyResponse</span>&gt;();
+
+<span class="c-keyword">if</span> (data.tier == <span class="c-string">"premium"</span> || data.tier == <span class="c-string">"admin"</span>)
+{
+    <span class="c-func">EnablePremiumFeatures</span>();
+}
+        </div>
+      </div>
+      <div class="lang-block" data-lang="js">
+        <div class="code-block" style="border-top:none;border-radius:0 var(--radius) var(--radius) var(--radius)">
+<span class="c-comment">// Works in Node.js, Electron, or any JS environment</span>
+<span class="c-keyword">const</span> <span class="c-var">response</span> = <span class="c-keyword">await</span> <span class="c-func">fetch</span>(<span class="c-string">`${API_BASE}/api/verify`</span>, {
+  headers: { <span class="c-string">Authorization</span>: <span class="c-string">`Bearer ${token}`</span> }
+});
+<span class="c-keyword">const</span> <span class="c-var">data</span> = <span class="c-keyword">await</span> response.<span class="c-func">json</span>();
+
+<span class="c-keyword">if</span> ([<span class="c-string">'premium'</span>, <span class="c-string">'admin'</span>].<span class="c-func">includes</span>(data.tier)) {
+  <span class="c-func">showPremiumContent</span>();
+}
+        </div>
+      </div>
+      <div class="lang-block" data-lang="rest">
+        <div class="code-block" style="border-top:none;border-radius:0 var(--radius) var(--radius) var(--radius)">
+<span class="c-comment"># NexAuth is a standard REST API — use from any language</span>
+<span class="c-comment"># 1. Login to get a token</span>
+POST https://your-app.onrender.com/api/login
+Content-Type: application/json
+{ "username": "user123", "password": "pass" }
+
+<span class="c-comment"># Response:</span>
+{ "token": "eyJ...", "tier": "premium", "username": "user123" }
+
+<span class="c-comment"># 2. Verify token on startup / periodically</span>
+GET https://your-app.onrender.com/api/verify
+Authorization: Bearer eyJ...
+
+<span class="c-comment"># Response:</span>
+{ "valid": true, "tier": "premium", "username": "user123" }
+        </div>
       </div>
 
-      <h2 id="tiers">Tiers &amp; Licensing</h2>
-      <p>NexAuth uses three built-in tiers. Every user gets exactly one tier at any time.</p>
+      <h2 id="tiers">Tiers &amp; Access Control</h2>
+      <p>Every user in your app has exactly one tier. NexAuth provides three built-in tiers:</p>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0">
         <div class="card">
           <div class="tag tag-dim mb-8">🎮 FREE</div>
-          <p style="font-size:12px;margin:0">Default tier. Access to basic features. Perfect for free users and trial accounts.</p>
+          <p style="font-size:12px;margin:0;color:var(--text-dim)">The default tier. New registrations start here. You decide what features free users can access.</p>
         </div>
         <div class="card" style="border-color:var(--cyan-dim)">
           <div class="tag tag-cyan mb-8">💎 PREMIUM</div>
-          <p style="font-size:12px;margin:0">Paying customers. Unlocks premium features. Also active during trial periods.</p>
+          <p style="font-size:12px;margin:0;color:var(--text-dim)">Paying or trial users. <code>is_premium()</code> returns true. Unlocks whatever features you choose to gate.</p>
         </div>
         <div class="card" style="border-color:#ffaa0060">
           <div class="tag tag-amber mb-8">👑 ADMIN</div>
-          <p style="font-size:12px;margin:0">Full access including admin panel. First registered user becomes admin automatically.</p>
+          <p style="font-size:12px;margin:0;color:var(--text-dim)">Full access. <code>is_premium()</code> also returns true for admin. The first registered user becomes admin automatically.</p>
         </div>
       </div>
 
-      <h3 id="tier-gating">Tier Gating in Code</h3>
+      <h3 id="tier-gating">Gating Features</h3>
+      <p>Check tier anywhere in your codebase. There's no SDK initialization or context object — just call the function.</p>
       <div class="code-block">
-<span class="c-comment"># Check tier in your app</span>
-<span class="c-keyword">import</span> <span class="c-func">auth</span>
-
-<span class="c-comment"># Simple boolean checks</span>
-<span class="c-keyword">if</span> <span class="c-var">auth</span>.<span class="c-func">is_premium</span>():    <span class="c-comment"># True for premium AND admin</span>
-    <span class="c-func">unlock_downloader</span>()
+<span class="c-comment"># Boolean helpers — simplest approach</span>
+<span class="c-keyword">if</span> <span class="c-var">auth</span>.<span class="c-func">is_premium</span>():   <span class="c-comment"># True for premium AND admin</span>
+    <span class="c-func">show_export_button</span>()
 
 <span class="c-keyword">if</span> <span class="c-var">auth</span>.<span class="c-func">is_admin</span>():
     <span class="c-func">show_admin_tab</span>()
 
-<span class="c-comment"># Or check the tier string directly</span>
-<span class="c-keyword">if</span> <span class="c-var">auth</span>.current_tier == <span class="c-string">"premium"</span>:
-    <span class="c-func">show_premium_badge</span>()
+<span class="c-comment"># Or check the tier string directly for more granular control</span>
+tier = <span class="c-var">auth</span>.current_tier  <span class="c-comment"># "free" | "premium" | "admin"</span>
 
-<span class="c-comment"># Current user info</span>
-<span class="c-func">print</span>(<span class="c-var">auth</span>.current_user)   <span class="c-comment"># "darkwolf92"</span>
-<span class="c-func">print</span>(<span class="c-var">auth</span>.current_tier)   <span class="c-comment"># "premium"</span>
-<span class="c-func">print</span>(<span class="c-var">auth</span>.current_email)  <span class="c-comment"># "user@email.com"</span>
+<span class="c-keyword">if</span> tier == <span class="c-string">"admin"</span>:
+    <span class="c-func">show_crown_badge</span>()
+<span class="c-keyword">elif</span> tier == <span class="c-string">"premium"</span>:
+    <span class="c-func">show_diamond_badge</span>()
+<span class="c-keyword">else</span>:
+    <span class="c-func">show_free_badge</span>()
       </div>
 
       <h2 id="hwid">HWID Locking</h2>
-      <p>Hardware ID locking binds a license to a specific machine, preventing account sharing. NexAuth generates a hardware fingerprint from MAC address, processor info, and machine name.</p>
+      <p>
+        Hardware ID locking binds a license to a specific physical machine, preventing users
+        from sharing account credentials with others.
+      </p>
 
       <div class="callout warn">
-        <div class="callout-title">⚠️ HWID available on Indie plan and above</div>
-        HWID locking requires the Indie ($9/mo) or Studio ($29/mo) plan.
+        <div class="callout-title">⚠️ HWID requires Starter plan or above</div>
+        HWID locking is available on the Starter ($5/mo) plan and all paid plans above it.
+        The Free plan does not include HWID.
       </div>
 
       <h3>How It Works</h3>
       <ol>
-        <li>On first login after HWID is enabled, the client generates and registers a hardware fingerprint</li>
-        <li>On subsequent logins, the fingerprint is verified server-side</li>
-        <li>If the fingerprint doesn't match, login is rejected with a clear error message</li>
-        <li>Admins can reset any user's HWID from the user profile popup</li>
-        <li>Users can self-service reset after a 7-day cooldown (configurable)</li>
+        <li>On the user's first login with HWID enabled, the client generates a hardware fingerprint (from MAC address, CPU identifier, machine name, etc.)</li>
+        <li>The fingerprint is sent to your backend and stored against that user's account</li>
+        <li>On every subsequent login, the fingerprint is re-generated and compared server-side</li>
+        <li>If the fingerprints don't match, the login is rejected with a clear error message</li>
+        <li>You can reset any user's HWID from the profile popup in your admin panel — useful when a user gets a new machine or reinstalls their OS</li>
       </ol>
 
-      <h2 id="trials">Trial Management</h2>
-      <p>Trials give users temporary premium access. They expire automatically and the tier reverts to free without any action required.</p>
+      <h3>Security Notes</h3>
+      <p>
+        HWID fingerprints based on software-readable hardware identifiers (MAC address, CPU info)
+        can be spoofed by determined users. For the vast majority of use cases — preventing casual
+        account sharing — this is entirely effective. For high-security licensing (medical, financial, etc.),
+        consider combining HWID with other measures.
+      </p>
+
+      <h2 id="trials">Trials &amp; Upgrades</h2>
+      <p>
+        Trials give users temporary premium access that expires automatically.
+        You set the duration, NexAuth handles the timer and automatic reversion.
+      </p>
 
       <div class="code-block">
-<span class="c-comment"># In your admin panel Python code</span>
+<span class="c-comment"># Grant a 14-day trial from your admin panel code</span>
 <span class="c-var">auth</span>.<span class="c-func">admin_set_trial</span>(
-    username = <span class="c-string">"newuser123"</span>,
+    username = <span class="c-string">"new_user"</span>,
     amount   = <span class="c-num">14</span>,
-    unit     = <span class="c-string">"days"</span>
+    unit     = <span class="c-string">"days"</span>   <span class="c-comment"># minutes | hours | days | weeks</span>
 )
 
-<span class="c-comment"># In your app — check trial status</span>
+<span class="c-comment"># Check trial status in your app</span>
 <span class="c-keyword">if</span> <span class="c-var">auth</span>.trial_info:
-    <span class="c-func">print</span>(<span class="c-var">auth</span>.trial_info)  <span class="c-comment"># "Trial active — 12h remaining"</span>
+    <span class="c-func">show_trial_banner</span>(<span class="c-var">auth</span>.trial_info)
+    <span class="c-comment"># trial_info = "Trial active — 12 days, 4 hours remaining"</span>
       </div>
+
+      <h3 id="payment-flow">Connecting to Payment</h3>
+      <p>
+        NexAuth doesn't handle payments — by design. This keeps it simple and lets you use
+        any payment method. Here are the two common patterns:
+      </p>
+      <p><strong>Redeem Codes (simplest):</strong> Generate a redeem code in your Render environment variables.
+      After a user pays via Stripe, PayPal, Ko-fi, or any other method, you give them the code.
+      They type it into your app's profile screen and their account upgrades automatically.</p>
+      <p><strong>Manual Upgrade:</strong> User pays and contacts you. You open your admin panel inside
+      your app, find their account, and click "Set Tier → Premium". Done in 10 seconds.</p>
 
       <h2 id="api-auth">API Reference — Authentication</h2>
+      <p>All endpoints are on your deployed backend URL. All protected endpoints require <code>Authorization: Bearer &lt;token&gt;</code>.</p>
 
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/register</span>
-        <span class="endpoint-desc">Create a new user account</span>
+        <span class="endpoint-desc">Register a new end-user account</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/login</span>
-        <span class="endpoint-desc">Authenticate and receive JWT token</span>
+        <span class="endpoint-desc">Authenticate and receive a JWT token + tier</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-get">GET</span>
+        <span class="method-badge get">GET</span>
         <span class="endpoint-path">/api/verify</span>
-        <span class="endpoint-desc">Verify token validity and get current tier</span>
+        <span class="endpoint-desc">Verify a token — returns current tier, username, trial info</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/redeem</span>
         <span class="endpoint-desc">Redeem a tier upgrade code</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/request_password_reset</span>
-        <span class="endpoint-desc">Request a password reset code from admin</span>
+        <span class="endpoint-desc">User requests a password reset (creates admin notification)</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/reset_password</span>
-        <span class="endpoint-desc">Complete password reset with admin-issued code</span>
+        <span class="endpoint-desc">Complete reset with admin-issued code + new password</span>
+      </div>
+      <div class="endpoint-row">
+        <span class="method-badge post">POST</span>
+        <span class="endpoint-path">/api/profile/update</span>
+        <span class="endpoint-desc">Update own username or email (requires valid token)</span>
       </div>
 
       <h2 id="api-admin">API Reference — Admin</h2>
+      <p>All admin endpoints require an admin-tier JWT token.</p>
 
       <div class="endpoint-row">
-        <span class="method-badge method-get">GET</span>
+        <span class="method-badge get">GET</span>
         <span class="endpoint-path">/api/admin/users</span>
-        <span class="endpoint-desc">List all users with full details</span>
+        <span class="endpoint-desc">List all end-users with full details</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/admin/set_tier</span>
-        <span class="endpoint-desc">Change a user's tier</span>
+        <span class="endpoint-desc">Change a user's tier (free / premium / admin)</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/admin/set_trial</span>
         <span class="endpoint-desc">Grant a time-limited trial to a user</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
+        <span class="endpoint-path">/api/admin/set_email</span>
+        <span class="endpoint-desc">Set or update a user's email address</span>
+      </div>
+      <div class="endpoint-row">
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/admin/ban_user</span>
         <span class="endpoint-desc">Permanently ban a user with reason</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/admin/suspend_user</span>
-        <span class="endpoint-desc">Temporarily suspend a user</span>
+        <span class="endpoint-desc">Temporarily suspend a user (duration + reason)</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/admin/unban_user</span>
         <span class="endpoint-desc">Lift a ban or suspension</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-get">GET</span>
-        <span class="endpoint-path">/api/admin/notifications</span>
-        <span class="endpoint-desc">Get unresolved admin notifications</span>
-      </div>
-      <div class="endpoint-row">
-        <span class="method-badge method-post">POST</span>
+        <span class="method-badge post">POST</span>
         <span class="endpoint-path">/api/admin/user_ips</span>
         <span class="endpoint-desc">Get last 3 login IPs for a user</span>
       </div>
       <div class="endpoint-row">
-        <span class="method-badge method-del">DEL</span>
+        <span class="method-badge get">GET</span>
+        <span class="endpoint-path">/api/admin/notifications</span>
+        <span class="endpoint-desc">Get unresolved admin notifications (password resets, flags)</span>
+      </div>
+      <div class="endpoint-row">
+        <span class="method-badge post">POST</span>
+        <span class="endpoint-path">/api/admin/resolve_notification</span>
+        <span class="endpoint-desc">Mark a notification as resolved</span>
+      </div>
+      <div class="endpoint-row">
+        <span class="method-badge del">DEL</span>
         <span class="endpoint-path">/api/admin/delete_user</span>
-        <span class="endpoint-desc">Permanently delete a user account</span>
+        <span class="endpoint-desc">Permanently delete a user account and all their data</span>
       </div>
 
-      <div class="callout info" style="margin-top:48px">
-        <div class="callout-title">📚 More coming soon</div>
-        This documentation is actively being expanded. SDK reference, webhook docs, and integration guides are on the way. Join our Discord for early access.
+      <h2 id="api-errors">Error Codes</h2>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:12px 24px;font-size:13px;margin-top:20px">
+        <code>400</code><span style="color:var(--text-dim)">Bad request — missing or invalid fields</span>
+        <code>401</code><span style="color:var(--text-dim)">Unauthorized — missing or invalid token</span>
+        <code>403</code><span style="color:var(--text-dim)">Forbidden — account banned, suspended, or insufficient tier</span>
+        <code>404</code><span style="color:var(--text-dim)">Not found — user or resource doesn't exist</span>
+        <code>409</code><span style="color:var(--text-dim)">Conflict — username already taken</span>
+        <code>500</code><span style="color:var(--text-dim)">Server error — check your Render logs</span>
+      </div>
+
+      <div class="callout" style="margin-top:48px">
+        <div class="callout-title">📚 More documentation coming</div>
+        Webhook events, SDK references for more languages, and detailed integration guides are actively being written.
+        Join our Discord for early access and to request specific documentation.
       </div>
     </main>
   </div>
 
   <script src="js/main.js"></script>
+  <script>
+  function switchLang(tab, lang) {
+    document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.lang-block').forEach(b => b.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+  }
+  </script>
 </body>
 </html>

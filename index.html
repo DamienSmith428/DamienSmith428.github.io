@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexAuth — Licensing & Auth Infrastructure for Indie Developers</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ── Hero ──────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      padding: 80px 0;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 5vw, 68px);
+      font-weight: 800;
+      color: var(--text-hi);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .hero-title .line-2 {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--text-dim);
+    }
+    .hero-title .line-3 {
+      color: var(--cyan);
+      position: relative;
+      display: inline-block;
+    }
+    .hero-title .line-3::after {
+      content: '';
+      position: absolute;
+      bottom: 4px; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--electric), var(--cyan));
+      border-radius: 2px;
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+    .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .hero-note {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero-right { position: relative; }
+    .hero-code-window {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 24px 80px #00000060, var(--glow-electric);
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+    .hero-code-window .window-bar {
+      background: var(--bg-elevated);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .window-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-red   { background: #ff5f57; }
+    .dot-amber { background: #ffbd2e; }
+    .dot-green { background: #28c941; }
+    .window-bar .filename {
+      margin-left: auto;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .hero-floating-badge {
+      position: absolute;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 12px;
+      box-shadow: 0 8px 30px #00000050;
+      animation: fadeInUp 0.6s ease both;
+    }
+    .hero-floating-badge.top-right {
+      top: -20px; right: -20px;
+      border-color: var(--green);
+      animation-delay: 0.8s;
+    }
+    .hero-floating-badge.bottom-left {
+      bottom: -20px; left: -20px;
+      border-color: var(--cyan-dim);
+      animation-delay: 1s;
+    }
+
+    /* ── Social proof ──────────────────────────────────── */
+    .social-proof {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+    .social-proof-inner {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .proof-label { font-size: 12px; color: var(--text-muted); letter-spacing: 0.1em; white-space: nowrap; }
+    .proof-stats { display: flex; gap: 48px; flex: 1; }
+    .proof-stat { text-align: center; }
+    .proof-stat .num {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-hi);
+      display: block;
+    }
+    .proof-stat .lbl { font-size: 11px; color: var(--text-muted); letter-spacing: 0.08em; }
+
+    /* ── Features ──────────────────────────────────────── */
+    .features { padding: 120px 0; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+    }
+    .feature-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at top left, var(--cyan-glow), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feature-card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-hi);
+      margin-bottom: 10px;
+    }
+    .feature-desc { font-size: 13px; color: var(--text-dim); line-height: 1.8; }
+
+    /* ── How it works ──────────────────────────────────── */
+    .how-it-works { padding: 120px 0; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-top: 64px;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), var(--border-bright), var(--border), transparent);
+    }
+    .step { text-align: center; position: relative; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--cyan);
+      margin: 0 auto 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-hi);
+      margin-bottom: 8px;
+    }
+    .step-desc { font-size: 13px; color: var(--text-dim); line-height: 1.7; }
+
+    /* ── Pricing ───────────────────────────────────────── */
+    .pricing { padding: 120px 0; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 64px;
+      align-items: start;
+    }
+
+    /* ── CTA ───────────────────────────────────────────── */
+    .cta-section {
+      padding: 120px 0;
+      text-align: center;
+      position: relative;
+    }
+    .cta-glow {
+      position: absolute;
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, var(--cyan-glow), transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cta-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 4vw, 56px);
+      font-weight: 800;
+      color: var(--text-hi);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .cta-sub {
+      font-size: 16px;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-trail"></div>
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ── Nav ──────────────────────────────────────────── -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">N</div>
+      Nex<span class="accent">Auth</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="docs.html">Docs</a></li>
+      <li><a href="dashboard.html">Dashboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <div class="flex gap-8" style="align-items:center">
+        <div class="status-dot"></div>
+        <span style="font-size:11px;color:var(--text-muted)">All systems operational</span>
+      </div>
+      <a href="dashboard.html" class="btn btn-ghost btn-sm">Sign In</a>
+      <a href="dashboard.html" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="grid-overlay"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-eyebrow animate-up">
+            <span class="tag tag-cyan">⚡ Now in Public Beta</span>
+            <span style="font-size:12px;color:var(--text-muted)">v1.0 — Built by devs, for devs</span>
+          </div>
+          <h1 class="hero-title animate-up delay-1">
+            Licensing &amp;<br>
+            <span class="line-2">authentication</span><br>
+            <span class="line-3">that just works.</span>
+          </h1>
+          <p class="hero-sub animate-up delay-2">
+            Stop paying $200/month for enterprise auth. NexAuth gives indie developers
+            production-grade license keys, HWID locking, trial management, and
+            a full admin panel — starting free.
+          </p>
+          <div class="hero-actions animate-up delay-3">
+            <a href="dashboard.html" class="btn btn-primary btn-lg">Start for free →</a>
+            <a href="docs.html" class="btn btn-ghost btn-lg">Read the docs</a>
+          </div>
+          <div class="hero-note animate-up delay-4">
+            <span>✓</span> No credit card required
+            <span style="margin:0 8px;color:var(--border)">·</span>
+            <span>✓</span> 50 users free forever
+            <span style="margin:0 8px;color:var(--border)">·</span>
+            <span>✓</span> 5-minute setup
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="hero-code-window">
+            <div class="window-bar">
+              <div class="dot dot-red"></div>
+              <div class="dot dot-amber"></div>
+              <div class="dot dot-green"></div>
+              <span class="filename">auth.py</span>
+            </div>
+            <div class="code-block" style="border:none;border-radius:0;padding:28px">
+<span class="c-comment"># Drop NexAuth into any Python project</span>
+<span class="c-keyword">import</span> <span class="c-func">nexauth</span> <span class="c-keyword">as</span> <span class="c-var">auth</span>
+
+<span class="c-comment"># Configure once</span>
+<span class="c-var">auth</span>.<span class="c-func">configure</span>(
+  app_id   = <span class="c-string">"your-app-id"</span>,
+  api_base = <span class="c-string">"https://your.render.app"</span>
+)
+
+<span class="c-comment"># Check tier anywhere in your app</span>
+<span class="c-keyword">if</span> <span class="c-var">auth</span>.<span class="c-func">is_premium</span>():
+  <span class="c-func">unlock_feature</span>()
+
+<span class="c-comment"># Verify HWID automatically</span>
+<span class="c-keyword">if not</span> <span class="c-var">auth</span>.<span class="c-func">verify_hwid</span>():
+  <span class="c-func">show_locked_screen</span>()
+
+<span class="c-comment"># Trial management built-in</span>
+<span class="c-var">trial</span> = <span class="c-var">auth</span>.<span class="c-func">get_trial_info</span>()
+<span class="c-keyword">print</span>(<span class="c-string">f"</span><span class="c-num">{trial.days_remaining}</span><span class="c-string"> days left"</span>)
+            </div>
+          </div>
+          <div class="hero-floating-badge top-right">
+            <div class="flex gap-8" style="align-items:center;margin-bottom:4px">
+              <div class="status-dot"></div>
+              <span class="text-green" style="font-weight:600;font-size:13px">License Verified</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-muted)">HWID ✓ · Tier: PREMIUM · 28d left</div>
+          </div>
+          <div class="hero-floating-badge bottom-left">
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">NEW USER</div>
+            <div style="font-size:13px;color:var(--text-hi);font-weight:600">darkwolf92 registered</div>
+            <div style="font-size:11px;color:var(--text-muted)">2 seconds ago · free tier</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Social proof ──────────────────────────────────── -->
+  <section class="social-proof">
+    <div class="container">
+      <div class="social-proof-inner">
+        <div class="proof-label">TRUSTED BY INDIE DEVS</div>
+        <div class="proof-stats">
+          <div class="proof-stat">
+            <span class="num" data-count="2840">0</span>
+            <span class="lbl">APPS PROTECTED</span>
+          </div>
+          <div class="proof-stat">
+            <span class="num" data-count="48200">0</span>
+            <span class="lbl">LICENSES ISSUED</span>
+          </div>
+          <div class="proof-stat">
+            <span class="num" data-count="99">0</span>
+            <span class="lbl">% UPTIME</span>
+          </div>
+          <div class="proof-stat">
+            <span class="num" data-count="340">0</span>
+            <span class="lbl">HWID RESETS / MO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ──────────────────────────────────────── -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="text-center scroll-reveal">
+        <div class="section-eyebrow" style="justify-content:center">Everything you need</div>
+        <h2 class="section-title mb-16">
+          Built for <span class="accent">real software.</span><br>
+          <span class="serif">Not enterprise bloat.</span>
+        </h2>
+        <p class="section-sub" style="margin:0 auto">
+          Every feature NexAuth ships is something an indie dev actually needs.
+          No fluff, no sales calls, no enterprise pricing.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">🔑</div>
+          <div class="feature-title">License Keys & Tiers</div>
+          <div class="feature-desc">Free, premium, and admin tiers out of the box. Redeem codes, trial periods, and instant upgrades — all manageable from your admin panel.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">💻</div>
+          <div class="feature-title">HWID Locking</div>
+          <div class="feature-desc">Bind licenses to hardware fingerprints automatically. Users can self-serve HWID resets after a cooldown, or you reset them instantly from the admin panel.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">⏱️</div>
+          <div class="feature-title">Trial Management</div>
+          <div class="feature-desc">Create time-limited trials with automatic expiry. Set durations in minutes, hours, days, or weeks. Extend or revoke from the admin panel anytime.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-title">Ban & Suspend</div>
+          <div class="feature-desc">Temporary suspensions with reasons and auto-expiry, or permanent bans. Users see your message on login. Lift restrictions with one click.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">📍</div>
+          <div class="feature-title">IP Tracking</div>
+          <div class="feature-desc">See the last 3 login IPs for every user. Admin accounts are always redacted. Useful for spotting account sharing or suspicious activity.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">🔐</div>
+          <div class="feature-title">Password Resets</div>
+          <div class="feature-desc">Admin-gated reset codes with 48-hour expiry. Users request resets, you get a notification, issue the code, done. No email server required.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">🎛️</div>
+          <div class="feature-title">Embedded Admin Panel</div>
+          <div class="feature-desc">Your admin panel lives inside your app behind a tier check. No separate login, no web dashboard to maintain, no extra hosting costs.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">📶</div>
+          <div class="feature-title">Offline Grace Period</div>
+          <div class="feature-desc">Users stay authenticated for up to 7 days without an internet connection. Perfect for apps used in low-connectivity environments.</div>
+        </div>
+        <div class="feature-card scroll-reveal">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">JWT Sessions</div>
+          <div class="feature-desc">Industry-standard JWT authentication with configurable expiry. Tokens are signed server-side — clients can never forge or modify them.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How it works ────────────────────────────────────── -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="grid-overlay"></div>
+    <div class="container">
+      <div class="text-center scroll-reveal">
+        <div class="section-eyebrow" style="justify-content:center">Simple by design</div>
+        <h2 class="section-title mb-16">Up in <span class="accent">5 minutes.</span></h2>
+        <p class="section-sub" style="margin:0 auto">
+          No DevOps degree required. If you can run a Python script, you can ship NexAuth.
+        </p>
+      </div>
+      <div class="steps scroll-reveal">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Deploy Your Backend</div>
+          <div class="step-desc">Click deploy on Render. Your auth server is live in under 2 minutes with a Postgres database included.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">Add to Your App</div>
+          <div class="step-desc">Drop auth.py and login_window.py into your project. Configure your API URL. That's the entire integration.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Gate Your Features</div>
+          <div class="step-desc">Use auth.is_premium() and auth.current_tier to gate any feature in your app. One line of code per check.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-title">Ship It</div>
+          <div class="step-desc">Compile to EXE, distribute however you want. Your users register, pay, and get access — automatically.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pricing ────────────────────────────────────────── -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="text-center scroll-reveal">
+        <div class="section-eyebrow" style="justify-content:center">Honest pricing</div>
+        <h2 class="section-title mb-16">
+          Pay for what you <span class="accent">actually use.</span>
+        </h2>
+        <p class="section-sub" style="margin:0 auto">
+          Start free. Upgrade when you need to. No annual contracts, no feature gating on lower tiers.
+        </p>
+      </div>
+
+      <div class="pricing-grid scroll-reveal" style="margin-top:64px">
+        <!-- Free -->
+        <div class="plan-card">
+          <div class="tag tag-dim mb-16">STARTER</div>
+          <div class="plan-name">Free</div>
+          <div class="plan-price"><sup>$</sup>0<span class="period"> / mo</span></div>
+          <div class="plan-desc">Perfect for hobby projects and small tools. No credit card ever.</div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Up to 50 users</li>
+            <li><span class="check">✓</span> All auth features</li>
+            <li><span class="check">✓</span> Tier management</li>
+            <li><span class="check">✓</span> Admin panel</li>
+            <li><span class="check">✓</span> Community support</li>
+            <li class="dim"><span class="x">—</span> HWID locking</li>
+            <li class="dim"><span class="x">—</span> Multiple apps</li>
+            <li class="dim"><span class="x">—</span> Priority support</li>
+          </ul>
+          <a href="dashboard.html" class="btn btn-ghost w-full" style="justify-content:center">Get started free</a>
+        </div>
+
+        <!-- Indie -->
+        <div class="plan-card featured">
+          <div class="tag tag-cyan mb-16">INDIE</div>
+          <div class="plan-name">Indie</div>
+          <div class="plan-price"><sup>$</sup>9<span class="period"> / mo</span></div>
+          <div class="plan-desc">For developers shipping real software to real users.</div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Up to 500 users</li>
+            <li><span class="check">✓</span> All auth features</li>
+            <li><span class="check">✓</span> <strong style="color:var(--cyan)">HWID locking</strong></li>
+            <li><span class="check">✓</span> Up to 3 apps</li>
+            <li><span class="check">✓</span> Tier management</li>
+            <li><span class="check">✓</span> Admin panel</li>
+            <li><span class="check">✓</span> Email support</li>
+            <li class="dim"><span class="x">—</span> White-label</li>
+          </ul>
+          <a href="dashboard.html" class="btn btn-primary w-full" style="justify-content:center">Start 14-day trial →</a>
+        </div>
+
+        <!-- Studio -->
+        <div class="plan-card">
+          <div class="tag tag-amber mb-16">STUDIO</div>
+          <div class="plan-name">Studio</div>
+          <div class="plan-price"><sup>$</sup>29<span class="period"> / mo</span></div>
+          <div class="plan-desc">For studios and teams with multiple products and power users.</div>
+          <ul class="plan-features">
+            <li><span class="check">✓</span> Unlimited users</li>
+            <li><span class="check">✓</span> All auth features</li>
+            <li><span class="check">✓</span> HWID locking</li>
+            <li><span class="check">✓</span> Unlimited apps</li>
+            <li><span class="check">✓</span> <strong style="color:var(--amber)">White-label</strong></li>
+            <li><span class="check">✓</span> Priority support</li>
+            <li><span class="check">✓</span> Discord community</li>
+            <li><span class="check">✓</span> Custom integrations</li>
+          </ul>
+          <a href="dashboard.html" class="btn btn-outline w-full" style="justify-content:center">Contact us</a>
+        </div>
+      </div>
+
+      <div class="text-center scroll-reveal" style="margin-top:48px">
+        <p style="font-size:13px;color:var(--text-muted)">
+          All plans include: hosted on Render · PostgreSQL database · 99.9% uptime SLA · automatic SSL
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ───────────────────────────────────────────── -->
+  <section class="cta-section">
+    <div class="cta-glow"></div>
+    <div class="container" style="position:relative;z-index:1">
+      <div class="scroll-reveal">
+        <div class="section-eyebrow" style="justify-content:center">Ready to ship?</div>
+        <h2 class="cta-title">
+          Your users deserve<br>
+          <span style="color:var(--cyan)">better auth.</span>
+        </h2>
+        <p class="cta-sub">Join hundreds of indie developers who stopped overpaying for licensing infrastructure.</p>
+        <div class="flex-center gap-16" style="flex-wrap:wrap">
+          <a href="dashboard.html" class="btn btn-primary btn-lg">Deploy in 5 minutes →</a>
+          <a href="docs.html" class="btn btn-ghost btn-lg">Browse the docs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo" style="margin-bottom:0">
+            <div class="logo-mark">N</div>
+            Nex<span class="accent">Auth</span>
+          </a>
+          <p>Production-grade licensing and authentication infrastructure built for indie developers. Ship faster, protect smarter.</p>
+          <div class="flex gap-8 mt-16" style="align-items:center">
+            <div class="status-dot"></div>
+            <span style="font-size:12px;color:var(--text-muted)">All systems operational</span>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Developers</h4>
+          <ul>
+            <li><a href="docs.html">Quick Start</a></li>
+            <li><a href="docs.html#api">API Reference</a></li>
+            <li><a href="docs.html#examples">Examples</a></li>
+            <li><a href="dashboard.html">Status</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="dashboard.html">Open a Ticket</a></li>
+            <li><a href="#">Discord Community</a></li>
+            <li><a href="#">Email Us</a></li>
+            <li><a href="#">System Status</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 NexAuth. Built by an indie dev, for indie devs.</span>
+        <div class="flex gap-24">
+          <a href="#" style="color:var(--text-muted);text-decoration:none">Privacy</a>
+          <a href="#" style="color:var(--text-muted);text-decoration:none">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
